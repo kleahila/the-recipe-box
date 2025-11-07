@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Recipe Box - Homepage</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="#">The Recipe Box</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#recipes">Recipes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#categories">Categories</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#saved">Saved</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#community">Community</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="logout-link" href="#">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero bg-primary text-white text-center py-5">
+        <div class="container">
+            <h1>Welcome to The Recipe Box</h1>
+            <p>Discover, save, and share your favorite recipes.</p>
+        </div>
+    </section>
+
+    <!-- Recipes Section -->
+    <section id="recipes" class="py-5">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Recipes</h2>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addRecipeModal">Add Recipe</button>
+            </div>
+            <!-- Search and Filter -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <input type="text" id="searchInput" class="form-control" placeholder="Search recipes...">
+                </div>
+                <div class="col-md-6">
+                    <select id="categoryFilter" class="form-select">
+                        <option value="">All Categories</option>
+                        <option value="Breakfast">Breakfast</option>
+                        <option value="Lunch">Lunch</option>
+                        <option value="Dinner">Dinner</option>
+                        <option value="Dessert">Dessert</option>
+                        <option value="Drinks">Drinks</option>
+                    </select>
+                </div>
+            </div>
+            <!-- Recipe Grid -->
+            <div id="recipeGrid" class="row">
+                <!-- Recipes will be loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Saved Recipes Section -->
+    <section id="saved" class="py-5 bg-light">
+        <div class="container">
+            <h2>Saved Recipes</h2>
+            <div id="savedRecipeGrid" class="row">
+                <!-- Saved recipes will be loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Community Section -->
+    <section id="community" class="py-5">
+        <div class="container">
+            <h2>Community</h2>
+            <div class="row">
+                <div class="col-md-8">
+                    <div id="testimonials" class="row">
+                        <!-- Testimonials will be loaded here -->
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Share Your Thoughts</h5>
+                            <textarea id="commentInput" class="form-control mb-2" rows="3" placeholder="Write a comment..."></textarea>
+                            <button id="postCommentBtn" class="btn btn-primary">Post Comment</button>
+                        </div>
+                    </div>
+                    <div id="comments" class="mt-3">
+                        <!-- Comments will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-3">
+        <div class="container">
+            <p>&copy; 2023 The Recipe Box. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Modals -->
+    <!-- View Recipe Modal -->
+    <div class="modal fade" id="viewRecipeModal" tabindex="-1" aria-labelledby="viewRecipeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="viewRecipeModalLabel">Recipe Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="viewRecipeContent">
+                    <!-- Recipe details will be loaded here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-warning" id="editRecipeBtn">Edit</button>
+                    <button type="button" class="btn btn-danger" id="deleteRecipeBtn">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Recipe Modal -->
+    <div class="modal fade" id="addRecipeModal" tabindex="-1" aria-labelledby="addRecipeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addRecipeModalLabel">Add New Recipe</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addRecipeForm">
+                        <div class="mb-3">
+                            <label for="recipeTitle" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="recipeTitle" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="recipeCategory" class="form-label">Category</label>
+                            <select class="form-select" id="recipeCategory" required>
+                                <option value="Breakfast">Breakfast</option>
+                                <option value="Lunch">Lunch</option>
+                                <option value="Dinner">Dinner</option>
+                                <option value="Dessert">Dessert</option>
+                                <option value="Drinks">Drinks</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="recipeIngredients" class="form-label">Ingredients (one per line)</label>
+                            <textarea class="form-control" id="recipeIngredients" rows="4" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="recipeInstructions" class="form-label">Instructions</label>
+                            <textarea class="form-control" id="recipeInstructions" rows="6" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="recipeImageURL" class="form-label">Image URL</label>
+                            <input type="url" class="form-control" id="recipeImageURL">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="saveRecipeBtn">Save Recipe</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="script.js"></script>
+</body>
+</html>

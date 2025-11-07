@@ -1,0 +1,194 @@
+/* Custom Styles for The Recipe Box */
+
+/* Color Palette */
+:root {
+  --sandy-brown: #fcaa67ff;
+  --redwood: #b0413eff;
+  --cream: #ffffc7ff;
+  --dark-cyan: #548687ff;
+}
+
+/* Global Styles */
+body {
+  background-color: var(--cream);
+  font-family: 'Arial', sans-serif;
+  color: var(--redwood);
+}
+
+/* Navbar */
+.navbar {
+  background-color: var(--dark-cyan) !important;
+}
+
+.navbar-brand, .nav-link {
+  color: var(--cream) !important;
+}
+
+.nav-link:hover {
+  color: var(--sandy-brown) !important;
+}
+
+/* Hero Section */
+.hero {
+  background: linear-gradient(135deg, var(--sandy-brown), var(--dark-cyan));
+}
+
+/* Cards */
+.card {
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Buttons */
+.btn-primary {
+  background-color: var(--sandy-brown);
+  border-color: var(--sandy-brown);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: var(--redwood);
+  border-color: var(--redwood);
+}
+
+.btn-warning {
+  background-color: var(--sandy-brown);
+  border-color: var(--sandy-brown);
+}
+
+.btn-warning:hover {
+  background-color: var(--redwood);
+  border-color: var(--redwood);
+}
+
+.btn-danger {
+  background-color: var(--redwood);
+  border-color: var(--redwood);
+}
+
+.btn-danger:hover {
+  background-color: #8a2e2e;
+  border-color: #8a2e2e;
+}
+
+/* Forms */
+.form-control:focus {
+  border-color: var(--dark-cyan);
+  box-shadow: 0 0 0 0.2rem rgba(84, 134, 135, 0.25);
+}
+
+/* Recipe Cards */
+.recipe-card {
+  margin-bottom: 20px;
+}
+
+.recipe-card img {
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px 10px 0 0;
+}
+
+.recipe-card .card-body {
+  padding: 15px;
+}
+
+.recipe-card .card-title {
+  color: var(--redwood);
+  font-weight: bold;
+}
+
+.recipe-card .card-text {
+  color: var(--dark-cyan);
+}
+
+/* Icons */
+.like-icon, .save-icon {
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.like-icon:hover, .save-icon:hover {
+  color: var(--sandy-brown);
+}
+
+.like-icon.liked {
+  color: var(--redwood);
+}
+
+.save-icon.saved {
+  color: var(--dark-cyan);
+}
+
+/* Modals */
+.modal-content {
+  border-radius: 10px;
+}
+
+/* Testimonials */
+.testimonial-card {
+  background-color: var(--cream);
+  border-left: 5px solid var(--sandy-brown);
+  margin-bottom: 20px;
+}
+
+.testimonial-card .card-body {
+  padding: 20px;
+}
+
+.testimonial-card img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 15px;
+}
+
+/* Comments */
+.comment {
+  background-color: var(--cream);
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Footer */
+footer {
+  background-color: var(--dark-cyan);
+}
+
+/* Animations */
+.fade-in {
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.slide-up {
+  animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 2rem;
+  }
+
+  .recipe-card img {
+    height: 150px;
+  }
+}
