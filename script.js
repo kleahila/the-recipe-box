@@ -7,7 +7,7 @@ $(document).ready(function() {
             category: "Breakfast",
             ingredients: "Flour, Milk, Eggs, Sugar, Baking Powder",
             instructions: "Mix ingredients and cook on a griddle.",
-            imageURL: "images/pancakes.jpg",
+            imageURL: "assets/images/pancakes.jpg",
             likes: 10
         },
         {
@@ -16,7 +16,7 @@ $(document).ready(function() {
             category: "Dinner",
             ingredients: "Spaghetti, Eggs, Bacon, Parmesan, Black Pepper",
             instructions: "Cook pasta, fry bacon, mix with eggs and cheese.",
-            imageURL: "images/spaghetti.jpg",
+            imageURL: "assets/images/spaghetti.jpg",
             likes: 15
         },
         {
@@ -25,7 +25,7 @@ $(document).ready(function() {
             category: "Dessert",
             ingredients: "Flour, Sugar, Cocoa, Eggs, Milk, Butter",
             instructions: "Bake at 350°F for 30 minutes.",
-            imageURL: "images/cake.jpg",
+            imageURL: "assets/images/cake.jpg",
             likes: 20
         }
     ];
@@ -34,12 +34,12 @@ $(document).ready(function() {
         {
             name: "Alice",
             text: "Love this recipe box! So easy to find new meals.",
-            image: "images/alice.jpg"
+            image: "assets/images/alice.jpg"
         },
         {
             name: "Bob",
             text: "Great community and amazing recipes.",
-            image: "images/bob.jpg"
+            image: "assets/images/bob.jpg"
         }
     ];
 
@@ -201,7 +201,7 @@ $(document).ready(function() {
         const category = $('#recipeCategory').val();
         const ingredients = $('#recipeIngredients').val();
         const instructions = $('#recipeInstructions').val();
-        const imageURL = $('#recipeImageURL').val() || 'images/default.jpg';
+        const imageURL = $('#recipeImageURL').val() || 'assets/images/default.jpg';
 
         const recipes = JSON.parse(localStorage.getItem('recipes'));
 

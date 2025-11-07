@@ -1,5 +1,13 @@
 /* Custom Styles for The Recipe Box */
 
+/* Fonts */
+@font-face {
+  font-family: 'Bebas Neue';
+  src: url('assets/fonts/BebasNeue-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 /* Color Palette */
 :root {
   --sandy-brown: #fcaa67ff;
@@ -13,6 +21,10 @@ body {
   background-color: var(--cream);
   font-family: 'Arial', sans-serif;
   color: var(--redwood);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Bebas Neue', sans-serif;
 }
 
 /* Navbar */
