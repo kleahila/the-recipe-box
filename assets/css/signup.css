@@ -1,64 +1,103 @@
-
-/* Background setup */
+/* ===== Overall layout ===== */
 body {
-  background: url('assets/images/signup-bg.jpg') no-repeat center center/cover;
-  min-height: 100vh;
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background-color: #f5f5f5;
+}
+
+.container {
   display: flex;
+  height: 100vh;
+}
+
+/* ===== Left side: form ===== */
+.form-container {
+  flex: 1;
+  background-color: #fff;
+  padding: 60px;
+  display: flex;
+  flex-direction: column;
   justify-content: center;
-  align-items: center;
-  font-family: 'Arial', sans-serif;
-  color: #b0413e; /* matches redwood tone */
+  margin: 30px 0px 30px 30px;
 }
 
-/* Glassy card style */
-.card {
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(10px);
-  border-radius: 15px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-  padding: 25px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.25);
-}
-
-/* Heading */
-.card-title {
-  font-family: 'Bebas Neue', sans-serif;
-  color: #b0413e;
+.form-container h1 {
   font-size: 2rem;
-  letter-spacing: 1px;
+  color: #222;
+  margin-bottom: 10px;
 }
 
-/* Form fields */
-.form-control {
-  border-radius: 10px;
-  border: 1px solid #548687;
+.form-container p {
+  color: #666;
+  margin-bottom: 30px;
 }
 
-.form-control:focus {
-  border-color: #548687;
-  box-shadow: 0 0 0 0.2rem rgba(84, 134, 135, 0.25);
+/* ===== Input fields ===== */
+label {
+  font-weight: 500;
+  margin-bottom: 5px;
+  color: #333;
+  display: block;
 }
 
-/* Primary button (Sign Up) */
+input {
+  width: 100%;
+  padding: 12px 15px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+input:focus {
+  border-color: #4CAF50;
+}
+
+/* ===== Button ===== */
 .btn-primary {
-  background-color: #fcaa67;
-  border-color: #fcaa67;
-  border-radius: 10px;
-  font-weight: bold;
-  transition: background-color 0.3s ease, border-color 0.3s ease;
+  background-color: #4CAF50;
+  color: white;
+  font-size: 16px;
+  padding: 12px 0;
+  
+  border: 1px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+  width: 100%;
 }
 
 .btn-primary:hover {
-  background-color: #b0413e;
-  border-color: #b0413e;
+  background-color: #45a049;
 }
 
-/* Login button (href link styled as button) */
+/* ===== Login link styled as button ===== */
+.login-link {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.login-btn {
+  color: #4CAF50;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.login-btn:hover {
+  text-decoration: underline;
+}
+
+/* ===== Right side: image ===== */
+.image-container {
+    margin: 30px 30px 30px 0px;
+  flex: 1;
+  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+              url('assets/images/food.jpg') no-repeat center center/cover;
+  position: relative;
+}
+
 .login-btn {
   display: inline-block;
   margin-top: 10px;
@@ -70,18 +109,13 @@ body {
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.login-btn:hover {
-  background-color: #b0413e;
-  transform: translateY(-2px);
-}
-
-/* Centering tweaks for small screens */
-@media (max-width: 768px) {
-  .card {
-    padding: 20px;
+/* ===== Responsive ===== */
+@media (max-width: 900px) {
+  .container {
+    flex-direction: column;
   }
 
-  .card-title {
-    font-size: 1.5rem;
+  .image-container {
+    height: 250px;
   }
 }
