@@ -64,7 +64,7 @@ $(document).ready(function() {
     function checkSession() {
         const currentUser = localStorage.getItem('currentUser');
         if (!currentUser && window.location.pathname.includes('index.html')) {
-            window.location.href = 'login.html';
+            window.location.href = 'login2.html';
         }
     }
 
@@ -148,7 +148,7 @@ $(document).ready(function() {
     // Signup form
     $('#signupForm').submit(function(e) {
         e.preventDefault();
-        const username = $('#signupUsername').val();
+        const name = $('#signupName').val();
         const email = $('#signupEmail').val();
         const password = $('#signupPassword').val();
         const confirmPassword = $('#signupConfirmPassword').val();
@@ -159,14 +159,15 @@ $(document).ready(function() {
         }
 
         const users = JSON.parse(localStorage.getItem('users'));
-        if (users.find(user => user.username === username)) {
-            alert('Username already exists!');
+        // Use name as username, or check if email already exists
+        if (users.find(user => user.email === email)) {
+            alert('Email already exists!');
             return;
         }
 
-        users.push({ username, email, password });
+        users.push({ username: name, email, password });
         localStorage.setItem('users', JSON.stringify(users));
-        localStorage.setItem('currentUser', username);
+        localStorage.setItem('currentUser', name);
         window.location.href = 'index.html';
     });
 
@@ -192,7 +193,7 @@ $(document).ready(function() {
     $('#logout-link').click(function(e) {
         e.preventDefault();
         localStorage.removeItem('currentUser');
-        window.location.href = 'login.html';
+        window.location.href = 'login2.html';
     });
 
     // Add/Edit recipe

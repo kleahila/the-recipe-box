@@ -103,14 +103,23 @@ input:focus {
 /* log in button */
 .login-btn {
   font-weight: bold;
-  margin: 10px;
+  margin: 10px 10px 0px 10px;
   background-color: #548687;
   color: #ffffc7;
   padding: 12px 0;
   border-radius: 8px;
   cursor: pointer;
-  display: flex;
-  justify-content: center;
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  width: 93%;
+  transition: background-color 0.3s;
+}
+
+.login-btn:hover {
+  background-color: #457175;
+  color: #ffffc7;
+  text-decoration: none;
 }
 
 /*  Responsive */
