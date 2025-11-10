@@ -8,7 +8,7 @@ body {
 .container {
   display: flex;
   height: 100vh;
-  
+
 }
 
 /* Left side: form  */
@@ -21,7 +21,7 @@ body {
   align-items: center;
   margin: 30px 0px 30px 30px;
   border-radius: 10px 0px 0px 10px;
-  
+
 }
 
 
@@ -62,7 +62,7 @@ input:focus {
 .form-check {
   display: flex;
   align-items: center;
-  gap: 0.5rem; 
+  gap: 0.5rem;
 }
 
 
@@ -122,13 +122,47 @@ input:focus {
   text-decoration: none;
 }
 
-/*  Responsive */
+/* Responsive fix — keep side by side but scale properly */
 @media (max-width: 900px) {
   .container {
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
+    height: auto;
+  }
+
+  .form-container,
+  .image-container {
+    flex: 1 1 50%; /* each takes 50% width */
+    margin: 10px;
+    border-radius: 10px;
+  }
+
+  .form-container {
+    padding: 20px;
   }
 
   .image-container {
-    height: 250px;
+    background-position: center;
+    background-size: cover;
+    height: auto;
+    min-height: 300px;
+  }
+
+  input {
+    font-size: 13px;
+    padding: 10px 12px;
+  }
+
+  .btn-primary, .login-btn {
+    font-size: 14px;
+    padding: 10px 0;
+  }
+}
+
+/* Optional smaller breakpoint for mobile landscape */
+@media (max-width: 600px) {
+  .form-container,
+  .image-container {
+    flex: 1 1 100%; /* now stack only when truly necessary */
   }
 }
