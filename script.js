@@ -1,4 +1,4 @@
-$(document).ready(function () {
+/*$(document).ready(function () {
     // ===== Sample Data =====
     const sampleRecipes = [
         {
@@ -71,14 +71,15 @@ $(document).ready(function () {
             const card = `
                 <div class="col-md-4 recipe-card">
                     <div class="card">
+                        <img src="${recipe.image}" class="card-img-top" alt="${recipe.title}">
                         <div class="card-body">
                             <h5 class="card-title">${recipe.title}</h5>
                             <p class="card-text">${recipe.category}</p>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
-                                    <i class="like-icon ${isLiked ? "liked" : ""} bi bi-heart" data-id="${recipe.id}"></i>
+                                    <i class="like-icon ${isLiked ? 'liked' : ''} bi bi-heart" data-id="${recipe.id}"></i>
                                     <span class="likes-count">${recipe.likes}</span>
-                                    <i class="save-icon ${isSaved ? "saved" : ""} bi bi-bookmark ms-2" data-id="${recipe.id}"></i>
+                                    <i class="save-icon ${isSaved ? 'saved' : ''} bi bi-bookmark ms-2" data-id="${recipe.id}"></i>
                                 </div>
                                 <button class="btn btn-primary btn-sm view-recipe" data-id="${recipe.id}">View</button>
                             </div>
@@ -172,13 +173,14 @@ $(document).ready(function () {
         const recipe = recipes.find((r) => r.id === currentRecipeId);
 
         $("#viewRecipeContent").html(`
-            <h4>${recipe.title}</h4>
-            <p><strong>Category:</strong> ${recipe.category}</p>
-            <p><strong>Ingredients:</strong></p>
-            <ul>${recipe.ingredients.split(",").map((i) => `<li>${i.trim()}</li>`).join("")}</ul>
-            <p><strong>Instructions:</strong></p>
-            <p>${recipe.instructions}</p>
-        `);
+                <img src="${recipe.image}" class="img-fluid mb-2" alt="${recipe.title}">
+                <h4>${recipe.title}</h4>
+                <p><strong>Category:</strong> ${recipe.category}</p>
+                <p><strong>Ingredients:</strong></p>
+                <ul>${recipe.ingredients.split(",").map((i) => `<li>${i.trim()}</li>`).join("")}</ul>
+                <p><strong>Instructions:</strong></p>
+                <p>${recipe.instructions}</p>
+            `);
         $("#viewRecipeModal").modal("show");
     });
 
@@ -273,4 +275,4 @@ $(document).ready(function () {
         checkSession();
         loadRecipes();
     }
-});
+});*/
