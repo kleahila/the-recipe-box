@@ -42,7 +42,10 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Hero Section */
 .hero {
-  background: linear-gradient(135deg, var(--sandy-brown), var(--dark-cyan));
+  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+      url('assets/images/dashboard.jpg'); 
+  position: relative;
+  background-size: cover;
 }
 
 /* Cards */
