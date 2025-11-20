@@ -67,48 +67,82 @@
                 </div>
             </div>
 
-            <div id="recipeGrid" class="row"></div>
-            <div id="recipeGrid" class="row g-4">
+  <div id="recipeGrid" class="row"></div>
+<div id="recipeGrid1" class="row g-4">
 
-  <!-- Recipe 1 -->
-  <div class="col-md-4">
-    <div class="card h-100 shadow-sm">
-      <img src="assets/images/pancakes.jpg" class="card-img-top" alt="Fluffy Pancakes">
-      <div class="card-body">
-        <h5 class="card-title">Fluffy Pancakes</h5>
-        <p class="card-text">Start your day with these light and fluffy pancakes.</p>
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#viewRecipeModal">View Recipe</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Recipe 2 -->
-  <div class="col-md-4">
-    <div class="card h-100 shadow-sm">
-      <img src="assets/images/spaghetti.jpg" class="card-img-top" alt="Spaghetti Carbonara">
-      <div class="card-body">
-        <h5 class="card-title">Spaghetti Carbonara</h5>
-        <p class="card-text">A classic Italian pasta dish with creamy sauce.</p>
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#viewRecipeModal">View Recipe</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Recipe 3 -->
-  <div class="col-md-4">
-    <div class="card h-100 shadow-sm">
-      <img src="assets/images/cake.jpg" class="card-img-top" alt="Chocolate Cake">
-      <div class="card-body">
-        <h5 class="card-title">Chocolate Cake</h5>
-        <p class="card-text">Rich, moist chocolate cake perfect for dessert.</p>
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#viewRecipeModal">View Recipe</button>
-      </div>
-    </div>
-  </div>
-
-</div>
+    <!-- Recipe 1 -->
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            <img src="assets/images/pancakes.jpg" class="card-img-top" alt="Fluffy Pancakes">
+            <div class="card-body">
+                <h5 class="card-title">Fluffy Pancakes</h5>
+                <p class="card-text">Start your day with these light and fluffy pancakes.</p>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#recipe1Modal">View Recipe</button>
+            </div>
         </div>
-    </section>
+    </div>
+
+    <!-- Recipe 2 -->
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            <img src="assets/images/spaghetti.jpg" class="card-img-top" alt="Spaghetti Carbonara">
+            <div class="card-body">
+                <h5 class="card-title">Spaghetti Carbonara</h5>
+                <p class="card-text">A classic Italian pasta dish with creamy sauce.</p>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#recipe2Modal">View Recipe</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recipe 3 -->
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            <img src="assets/images/cake.jpg" class="card-img-top" alt="Chocolate Cake">
+            <div class="card-body">
+                <h5 class="card-title">Chocolate Cake</h5>
+                <p class="card-text">Rich, moist chocolate cake perfect for dessert.</p>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#recipe3Modal">View Recipe</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recipe 4 -->
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            <img src="assets/images/Brownie Milkshake.jpg" class="card-img-top" alt="Brownie Milkshake">
+            <div class="card-body">
+                <h5 class="card-title">Brownie Milkshake</h5>
+                <p class="card-text">Treat yourself to the ultimate indulgence with a rich, creamy Brownie Milkshake!</p>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#recipe4Modal">View Recipe</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recipe 5 -->
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            <img src="assets/images/Cinnamon Rolls.jpg" class="card-img-top" alt="Cinnamon Rolls">
+            <div class="card-body">
+                <h5 class="card-title">Cinnamon Rolls</h5>
+                <p class="card-text">All the deliciousness of traditional homemade cinnamon rolls, but in half the time!</p>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#recipe5Modal">View Recipe</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recipe 6 -->
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+             <img src="assets/images/garlic-chicken.jpg" class="card-img-top" alt="Garlic Butter Chicken">
+             <div class="card-body">
+                <h5 class="card-title">Garlic Butter Chicken</h5>
+                <p class="card-text">Juicy chicken cooked in a rich garlic-butter sauce. Perfect for dinner!</p>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#recipe6Modal">View Recipe</button>
+            </div>
+        </div>
+    </div>
+
+</div> 
 
     <!-- Saved Recipes -->
     <section id="saved" class="py-5 bg-light">
@@ -137,13 +171,256 @@
 
                 <div class="modal-footer">
                     <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button class="btn btn-warning" id="editRecipeBtn">Edit</button>
                     <button class="btn btn-danger" id="deleteRecipeBtn">Delete</button>
                 </div>
 
             </div>
         </div>
     </div>
+
+    <!--Recipe 1 Modal-->
+    <div class="modal fade" id="recipe1Modal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Fluffy Pancakes</h5>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <img src="assets/images/pancakes.jpg" class="img-fluid mb-3">
+        <h5>Ingredients</h5>
+        <ul>
+          <li>1 cup flour</li>
+          <li>2 tbsp sugar</li>
+          <li>1 egg</li>
+          <li>1 cup milk</li>
+        </ul>
+
+        <h5>Instructions</h5>
+        <ol>
+          <li>Mix all ingredients together.</li>
+          <li>Heat a non-stick pan.</li>
+          <li>Pour batter, cook until golden.</li>
+        </ol>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+    <!--Recipe 2 Modal-->
+    <div class="modal fade" id="recipe2Modal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Spaghetti Carbonara</h5>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <img src="assets/images/spaghetti.jpg" class="img-fluid mb-3">
+        <h5>Ingredients</h5>
+        <ul>
+          <li>Spaghetti</li>
+          <li>Eggs</li>
+          <li>Pancetta</li>
+          <li>Parmesan cheese</li>
+          <li>Black pepper</li>
+        </ul>
+
+        <h5>Instructions</h5>
+        <ol>
+          <li>Boil pasta.</li>
+          <li>Cook pancetta.</li>
+          <li>Mix eggs + cheese.</li>
+          <li>Combine everything.</li>
+        </ol>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+    <!--Recipe 3 Modal-->
+    <div class="modal fade" id="recipe3Modal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Chocolate Cake</h5>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <img src="assets/images/cake.jpg" class="img-fluid mb-3">
+        <h5>Ingredients</h5>
+        <ul>
+          <li>Flour</li>
+          <li>Cocoa powder</li>
+          <li>Sugar</li>
+          <li>Eggs</li>
+        </ul>
+
+        <h5>Instructions</h5>
+        <ol>
+          <li>Mix dry ingredients.</li>
+          <li>Add wet ingredients.</li>
+          <li>Bake for 30 minutes.</li>
+        </ol>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+    <!--Recipe 4 Modal-->
+    <div class="modal fade" id="recipe4Modal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Brownie Milkshake</h5>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <img src="assets/images/Brownie Milkshake.jpg" class="img-fluid mb-3">
+        <h5>Ingredients</h5>
+        <ul>
+          <li>Ice cream</li>
+          <li>Milk</li>
+          <li>Brownie chunks</li>
+          <li>Chocolate syrup</li>
+        </ul>
+
+        <h5>Instructions</h5>
+        <ol>
+          <li>Blend all ingredients.</li>
+          <li>Top with extra brownie pieces.</li>
+        </ol>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+    <!--Recipe 5 Modal-->
+    <div class="modal fade" id="recipe5Modal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Cinnamon Roll</h5>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <img src="assets/images/Cinnamon Rolls.jpg" class="img-fluid mb-3">
+        <h5>Ingredients</h5>
+        <h6>Dough</h6>
+        <ul>
+            <li>3 ½ cups flour</li>
+            <li>¼ cup granulated sugar</li>
+            <li>2 ¼ tsp active dry yeast</li>
+            <li>1 cup warm milk</li>
+            <li>1 large egg</li>
+            <li>⅓ cup melted butter</li>
+            <li>1 tsp salt</li>
+        </ul>
+
+        <h6>Filling</h6>
+        <ul>
+            <li>½ cup softened butter</li>
+            <li>1 cup brown sugar</li>
+            <li>2 tbsp cinnamon</li>
+        </ul>
+
+        <h6>Cream Cheese Frosting</h6>
+        <ul>
+            <li>4 oz cream cheese (softened)</li>
+            <li>¼ cup butter</li>
+            <li>1 cup powdered sugar</li>
+            <li>½ tsp vanilla extract</li>
+            </ul>
+
+        <h5>Instructions</h5>
+        <ol>
+            <li>In a bowl, mix warm milk, sugar, and yeast. Let sit for 5 minutes until foamy.</li>
+            <li>Add egg, melted butter, and salt. Mix in the flour and knead until smooth. Cover and let rise for 1 hour.</li>
+            <li>Mix brown sugar and cinnamon in a small bowl to make the filling.</li>
+            <li>Roll the dough into a large rectangle. Spread softened butter on top and sprinkle the cinnamon-sugar mixture.</li>
+            <li>Roll tightly into a log and cut into 12 rolls.</li>
+            <li>Place rolls in a baking pan, cover, and let rise 30 minutes.</li>
+            <li>Bake at <strong>180°C (350°F)</strong> for 20–25 minutes or until golden.</li>
+            <li>Beat cream cheese, butter, powdered sugar, and vanilla until smooth to make the frosting.</li>
+            <li>Spread frosting over warm rolls and serve.</li>
+        </ol>
+        </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+   <!-- Recipe 6 Modal -->
+    <div class="modal fade" id="recipe6Modal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Garlic Butter Chicken</h5>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <img src="assets/images/garlic-chicken.jpg" class="img-fluid mb-3">
+        
+        <h5>Ingredients</h5>
+        <ul>
+          <li>4 chicken breasts</li>
+          <li>3 tbsp butter</li>
+          <li>4 garlic cloves (minced)</li>
+          <li>1 tsp paprika</li>
+          <li>1 tsp salt</li>
+          <li>½ tsp pepper</li>
+          <li>Fresh parsley (optional)</li>
+        </ul>
+
+        <h5>Instructions</h5>
+        <ol>
+          <li>Season the chicken with paprika, salt, and pepper.</li>
+          <li>Melt butter in a pan and sauté garlic until fragrant.</li>
+          <li>Add chicken and cook until golden on both sides.</li>
+          <li>Simmer on low heat until chicken is fully cooked.</li>
+          <li>Top with chopped parsley and serve warm.</li>
+        </ol>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
 
     <!-- Add Recipe Modal -->
     <div class="modal fade" id="addRecipeModal">
