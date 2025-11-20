@@ -1,98 +1,67 @@
 {
   "users": [
     {
-      "id": 1,
+      "id": "1",
       "name": "John Doe",
       "email": "john@example.com",
-      "username": "johndoe",
-      "password": "example",
-      "savedRecipes": [1, 2]
+      "password": "password"
     }
   ],
   "recipes": [
     {
-      "id": 1,
+      "id": "1",
       "title": "Fluffy Pancakes",
       "category": "Breakfast",
-      "image": "assets/images/pancakes.jpg",
-      "ingredients": ["1 cup flour", "2 tbsp sugar", "1 egg", "1 cup milk"],
-      "instructions": [
-        "Mix all ingredients together.",
-        "Heat a non-stick pan.",
-        "Pour batter, cook until golden."
-      ]
+      "ingredients": "1 cup flour\n2 tbsp sugar\n1 egg\n1 cup milk",
+      "instructions": "Mix all ingredients together.\nHeat a non-stick pan.\nPour batter, cook until golden.",
+      "image": "assets/images/pancakes.jpg"
     },
     {
-      "id": 2,
+      "id": "2",
       "title": "Spaghetti Carbonara",
-      "category": "Lunch",
-      "image": "assets/images/spaghetti.jpg",
-      "ingredients": [
-        "Spaghetti",
-        "Eggs",
-        "Pancetta",
-        "Parmesan cheese",
-        "Black pepper"
-      ],
-      "instructions": [
-        "Boil pasta.",
-        "Cook pancetta.",
-        "Mix eggs + cheese.",
-        "Combine everything."
-      ]
+      "category": "Dinner",
+      "ingredients": "Spaghetti\nEggs\nPancetta\nParmesan cheese\nBlack pepper",
+      "instructions": "Boil pasta.\nCook pancetta.\nMix eggs + cheese.\nCombine everything.",
+      "image": "assets/images/spaghetti.jpg"
     },
     {
-      "id": 3,
+      "id": "3",
       "title": "Chocolate Cake",
       "category": "Dessert",
-      "image": "assets/images/cake.jpg",
-      "ingredients": ["Flour", "Cocoa powder", "Sugar", "Eggs"],
-      "instructions": [
-        "Mix dry ingredients.",
-        "Add wet ingredients.",
-        "Bake for 30 minutes."
-      ]
+      "ingredients": "Flour\nCocoa powder\nSugar\nEggs",
+      "instructions": "Mix dry ingredients.\nAdd wet ingredients.\nBake for 30 minutes.",
+      "image": "assets/images/cake.jpg"
     },
     {
-      "id": 4,
+      "id": "4",
       "title": "Brownie Milkshake",
       "category": "Drinks",
-      "image": "assets/images/Brownie Milkshake.jpg",
-      "ingredients": ["Ice cream", "Milk", "Brownie chunks", "Chocolate syrup"],
-      "instructions": [
-        "Blend all ingredients.",
-        "Top with extra brownie pieces."
-      ]
+      "ingredients": "Ice cream\nMilk\nBrownie chunks\nChocolate syrup",
+      "instructions": "Blend all ingredients.\nTop with extra brownie pieces.",
+      "image": "assets/images/Brownie Milkshake.jpg"
     },
     {
-      "id": 5,
+      "id": "5",
       "title": "Cinnamon Rolls",
       "category": "Breakfast",
-      "image": "assets/images/Cinnamon Rolls.jpg",
-      "ingredients": ["See recipe modal details"],
-      "instructions": ["See recipe modal details"]
+      "ingredients": "Flour, Sugar, Yeast, Milk\nButter, Cinnamon, Brown Sugar\nCream Cheese, Powdered Sugar",
+      "instructions": "Prepare dough and let rise.\nRoll out and add filling.\nCut rolls and bake at 180°C.\nTop with frosting.",
+      "image": "assets/images/Cinnamon Rolls.jpg"
     },
     {
-      "id": 6,
+      "id": "6",
       "title": "Garlic Butter Chicken",
       "category": "Dinner",
-      "image": "assets/images/garlic-chicken.jpg",
-      "ingredients": [
-        "4 chicken breasts",
-        "3 tbsp butter",
-        "4 garlic cloves (minced)",
-        "1 tsp paprika",
-        "1 tsp salt",
-        "½ tsp pepper",
-        "Fresh parsley (optional)"
-      ],
-      "instructions": [
-        "Season the chicken with paprika, salt, and pepper.",
-        "Melt butter in a pan and sauté garlic until fragrant.",
-        "Add chicken and cook until golden on both sides.",
-        "Simmer on low heat until chicken is fully cooked.",
-        "Top with chopped parsley and serve warm."
-      ]
+      "ingredients": "4 chicken breasts\n3 tbsp butter\n4 garlic cloves\nPaprika, Salt, Pepper",
+      "instructions": "Season chicken.\nSauté garlic in butter.\nCook chicken until golden.\nSimmer and serve.",
+      "image": "assets/images/garlic-chicken.jpg"
+    }
+  ],
+  "saved": [
+    {
+      "id": "a4db",
+      "userId": "1",
+      "recipeId": 2
     }
   ]
 }
