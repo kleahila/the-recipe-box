@@ -222,6 +222,23 @@ footer {
     margin-bottom: 25px;
 }
 
+/* Make the whole page fill the screen */
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+/* Flex container for page layout */
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Main content expands so footer goes to bottom */
+main {
+    flex: 1;
+}
+
 
 @keyframes fadeIn {
   from { opacity: 0; }
