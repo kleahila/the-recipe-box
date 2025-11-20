@@ -1,0 +1,12 @@
+{
+  "name": "the-recipe-box",
+  "version": "1.0.0",
+  "description": "A simple recipe management application using HTML, jQuery, and JSON Server.",
+  "main": "script.js",
+  "scripts": {
+    "start": "json-server --watch db.json --port 3000"
+  },
+  "dependencies": {
+    "json-server": "^0.17.4"
+  }
+}
