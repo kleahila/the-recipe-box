@@ -1,278 +1,256 @@
-/*$(document).ready(function () {
-    // ===== Sample Data =====
-    const sampleRecipes = [
+const API_URL = "http://localhost:3000";
+
+// Store user info in localStorage for session simulation
+function setSession(user) {
+  localStorage.setItem("currentUser", JSON.stringify(user));
+}
+function getSessionUser() {
+  return JSON.parse(localStorage.getItem("currentUser"));
+}
+function clearSession() {
+  localStorage.removeItem("currentUser");
+}
+
+// SIGNUP LOGIC
+$(document).on("submit", "#signupForm", function (e) {
+  e.preventDefault();
+  const name = $("#signupName").val();
+  const email = $("#signupEmail").val();
+  const password = $("#signupPassword").val();
+  const confirm = $("#signupConfirmPassword").val();
+
+  if (password !== confirm) {
+    alert("Passwords do not match.");
+    return;
+  }
+
+  // Simple username from email
+  const username = email.split("@")[0];
+  // Check if user exists
+  $.get(`${API_URL}/users?email=${email}`, (users) => {
+    if (users.length > 0) {
+      alert("User already exists!");
+    } else {
+      // Register user
+      $.post(
+        `${API_URL}/users`,
         {
-            id: 1,
-            title: "Pancakes",
-            category: "Breakfast",
-            image: "assets/images/pancakes.jpg",
-            ingredients: "Flour, Milk, Eggs, Sugar, Baking Powder",
-            instructions: "Mix ingredients and cook on a griddle.",
-            likes: 10
+          name,
+          email,
+          username,
+          password,
+          savedRecipes: [],
         },
-        {
-            id: 2,
-            title: "Spaghetti Carbonara",
-            category: "Dinner",
-            image: "assets/images/spaghetti.jpg",
-            ingredients: "Spaghetti, Eggs, Bacon, Parmesan, Black Pepper",
-            instructions: "Cook pasta, fry bacon, mix with eggs and cheese.",
-            likes: 15
-        },
-        {
-            id: 3,
-            title: "Chocolate Cake",
-            category: "Dessert",
-            image: "assets/images/cake.jpg",
-            ingredients: "Flour, Sugar, Cocoa, Eggs, Milk, Butter",
-            instructions: "Bake at 350°F for 30 minutes.",
-            likes: 20
+        (user) => {
+          setSession(user);
+          window.location.href = "index.html";
         }
-    ];
+      );
+    }
+  });
+});
 
-    // ===== Initialize localStorage =====
-    if (!localStorage.getItem("users")) localStorage.setItem("users", JSON.stringify([]));
-    if (!localStorage.getItem("recipes")) localStorage.setItem("recipes", JSON.stringify(sampleRecipes));
+// LOGIN LOGIC
+$(document).on("submit", "#loginForm", function (e) {
+  e.preventDefault();
+  const username = $("#loginUsername").val();
+  const password = $("#loginPassword").val();
 
-    let currentRecipeId = null;
-    let isEditing = false;
+  $.get(
+    `${API_URL}/users?username=${username}&password=${password}`,
+    (users) => {
+      if (users.length === 1) {
+        setSession(users[0]);
+        window.location.href = "index.html";
+      } else {
+        alert("Invalid credentials.");
+      }
+    }
+  );
+});
 
-    // ===== Session Check =====
-    function checkSession() {
-        const currentUser = localStorage.getItem("currentUser");
-        if (!currentUser && window.location.pathname.includes("index.html")) {
-            window.location.href = "login.html";
-        }
+// LOGOUT LOGIC
+$(document).on("click", ".nav-link[href='landing.html']", function (e) {
+  clearSession();
+});
+
+// On main/index.html — load recipes, filter/search, add/save/delete
+if (location.pathname.endsWith("index.html")) {
+  $(document).ready(function () {
+    let currentUser = getSessionUser();
+    if (!currentUser) {
+      window.location.href = "landing.html";
+      return;
     }
 
-    // ===== Load Recipes =====
-    function loadRecipes(filterCategory = "", searchTerm = "", savedOnly = false) {
-        const recipes = JSON.parse(localStorage.getItem("recipes"));
-        const currentUser = localStorage.getItem("currentUser");
-        const savedRecipes = currentUser ? JSON.parse(localStorage.getItem(`savedRecipes_${currentUser}`) || "[]") : [];
-        const likedRecipes = currentUser ? JSON.parse(localStorage.getItem(`likedRecipes_${currentUser}`) || "[]") : [];
+    // Load all recipes
+    function loadRecipes() {
+      $.get(`${API_URL}/recipes`, (recipes) => {
+        renderRecipes(recipes);
+      });
+    }
 
-        const filteredRecipes = recipes.filter((recipe) => {
-            const matchesCategory = !filterCategory || recipe.category === filterCategory;
-            const matchesSearch =
-                !searchTerm ||
-                recipe.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                recipe.ingredients.toLowerCase().includes(searchTerm.toLowerCase());
-            const matchesSaved = !savedOnly || savedRecipes.includes(recipe.id);
-            return matchesCategory && matchesSearch && matchesSaved;
-        });
-
-        const container = savedOnly ? "#savedRecipeGrid" : "#recipeGrid";
-        $(container).empty();
-
-        filteredRecipes.forEach((recipe) => {
-            const isLiked = likedRecipes.includes(recipe.id);
-            const isSaved = savedRecipes.includes(recipe.id);
-            const card = `
-                <div class="col-md-4 recipe-card">
-                    <div class="card">
-                        <img src="${recipe.image}" class="card-img-top" alt="${recipe.title}">
-                        <div class="card-body">
-                            <h5 class="card-title">${recipe.title}</h5>
-                            <p class="card-text">${recipe.category}</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <i class="like-icon ${isLiked ? 'liked' : ''} bi bi-heart" data-id="${recipe.id}"></i>
-                                    <span class="likes-count">${recipe.likes}</span>
-                                    <i class="save-icon ${isSaved ? 'saved' : ''} bi bi-bookmark ms-2" data-id="${recipe.id}"></i>
-                                </div>
-                                <button class="btn btn-primary btn-sm view-recipe" data-id="${recipe.id}">View</button>
+    function renderRecipes(recipes) {
+      $("#recipeGrid").empty();
+      recipes.forEach((recipe) => {
+        $("#recipeGrid").append(`
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 shadow-sm">
+                            <img src="${
+                              recipe.image
+                            }" class="card-img-top" alt="${recipe.title}">
+                            <div class="card-body">
+                                <h5 class="card-title">${recipe.title}</h5>
+                                <p class="card-text">${recipe.category}</p>
+                                <button class="btn btn-primary view-btn" data-id="${
+                                  recipe.id
+                                }">View</button>
+                                <button class="btn btn-outline-danger save-btn" data-id="${
+                                  recipe.id
+                                }"><i class="bi bi-bookmark-heart${
+          currentUser.savedRecipes.includes(recipe.id) ? "-fill" : ""
+        }"></i></button>
                             </div>
                         </div>
                     </div>
-                </div>
-            `;
-            $(container).append(card);
+                `);
+      });
+    }
+
+    // Load saved recipes
+    function loadSavedRecipes() {
+      let saved = currentUser.savedRecipes || [];
+      $("#savedRecipeGrid").empty();
+      if (saved.length === 0) {
+        $("#savedRecipeGrid").append(
+          '<div class="col">No favorites yet.</div>'
+        );
+        return;
+      }
+      saved.forEach((id) => {
+        $.get(`${API_URL}/recipes/${id}`, (recipe) => {
+          $("#savedRecipeGrid").append(`
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100 shadow-sm">
+                                <img src="${recipe.image}" class="card-img-top" alt="${recipe.title}">
+                                <div class="card-body">
+                                    <h5 class="card-title">${recipe.title}</h5>
+                                    <p class="card-text">${recipe.category}</p>
+                                    <button class="btn btn-primary view-btn" data-id="${recipe.id}">View</button>
+                                    <button class="btn btn-danger unsave-btn" data-id="${recipe.id}"><i class="bi bi-x-circle"></i> Remove</button>
+                                </div>
+                            </div>
+                        </div>
+                    `);
         });
+      });
     }
 
-    // ===== Signup =====
-    $("#signupForm").submit(function (e) {
-        e.preventDefault();
-        const name = $("#signupName").val();
-        const email = $("#signupEmail").val();
-        const password = $("#signupPassword").val();
-        const confirmPassword = $("#signupConfirmPassword").val();
-
-        if (password !== confirmPassword) return alert("Passwords do not match!");
-
-        const users = JSON.parse(localStorage.getItem("users"));
-        if (users.find((user) => user.email === email)) return alert("Email already exists!");
-
-        users.push({ username: name, email, password });
-        localStorage.setItem("users", JSON.stringify(users));
-        localStorage.setItem("currentUser", name);
-        window.location.href = "index.html";
-    });
-
-    // ===== Login =====
-    $("#loginForm").submit(function (e) {
-        e.preventDefault();
-        const username = $("#loginUsername").val();
-        const password = $("#loginPassword").val();
-
-        const users = JSON.parse(localStorage.getItem("users"));
-        const user = users.find((u) => u.username === username && u.password === password);
-
-        if (user) {
-            localStorage.setItem("currentUser", username);
-            window.location.href = "index.html";
-        } else alert("Invalid credentials!");
-    });
-
-    // ===== Logout =====
-    $("#logout-link").click(function (e) {
-        e.preventDefault();
-        localStorage.removeItem("currentUser");
-        window.location.href = "login.html";
-    });
-
-    // ===== Add / Edit Recipe =====
-    $("#saveRecipeBtn").click(function () {
-        const title = $("#recipeTitle").val();
-        const category = $("#recipeCategory").val();
-        const ingredients = $("#recipeIngredients").val();
-        const instructions = $("#recipeInstructions").val();
-
-        const recipes = JSON.parse(localStorage.getItem("recipes"));
-
-        if (isEditing) {
-            const recipe = recipes.find((r) => r.id === currentRecipeId);
-            recipe.title = title;
-            recipe.category = category;
-            recipe.ingredients = ingredients;
-            recipe.instructions = instructions;
-        } else {
-            recipes.push({
-                id: Date.now(),
-                title,
-                category,
-                ingredients,
-                instructions,
-                likes: 0
-            });
-        }
-
-        localStorage.setItem("recipes", JSON.stringify(recipes));
-        $("#addRecipeModal").modal("hide");
-        $("#addRecipeForm")[0].reset();
-        isEditing = false;
-        currentRecipeId = null;
-        loadRecipes();
-    });
-
-    // ===== View Recipe =====
-    $(document).on("click", ".view-recipe", function () {
-        currentRecipeId = $(this).data("id");
-        const recipes = JSON.parse(localStorage.getItem("recipes"));
-        const recipe = recipes.find((r) => r.id === currentRecipeId);
-
-        $("#viewRecipeContent").html(`
-                <img src="${recipe.image}" class="img-fluid mb-2" alt="${recipe.title}">
-                <h4>${recipe.title}</h4>
-                <p><strong>Category:</strong> ${recipe.category}</p>
-                <p><strong>Ingredients:</strong></p>
-                <ul>${recipe.ingredients.split(",").map((i) => `<li>${i.trim()}</li>`).join("")}</ul>
-                <p><strong>Instructions:</strong></p>
-                <p>${recipe.instructions}</p>
-            `);
-        $("#viewRecipeModal").modal("show");
-    });
-
-    // ===== Edit Recipe =====
-    $("#editRecipeBtn").click(function () {
-        const recipes = JSON.parse(localStorage.getItem("recipes"));
-        const recipe = recipes.find((r) => r.id === currentRecipeId);
-
-        $("#recipeTitle").val(recipe.title);
-        $("#recipeCategory").val(recipe.category);
-        $("#recipeIngredients").val(recipe.ingredients);
-        $("#recipeInstructions").val(recipe.instructions);
-
-        isEditing = true;
-        $("#addRecipeModal").modal("show");
-        $("#viewRecipeModal").modal("hide");
-    });
-
-    // ===== Delete Recipe =====
-    $("#deleteRecipeBtn").click(function () {
-        if (!confirm("Are you sure?")) return;
-        const recipes = JSON.parse(localStorage.getItem("recipes"));
-        const updated = recipes.filter((r) => r.id !== currentRecipeId);
-        localStorage.setItem("recipes", JSON.stringify(updated));
-        $("#viewRecipeModal").modal("hide");
-        loadRecipes();
-    });
-
-    // ===== Like / Save =====
-    $(document).on("click", ".like-icon", function () {
-        const id = $(this).data("id");
-        const currentUser = localStorage.getItem("currentUser");
-        if (!currentUser) return;
-
-        let liked = JSON.parse(localStorage.getItem(`likedRecipes_${currentUser}`) || "[]");
-        const recipes = JSON.parse(localStorage.getItem("recipes"));
-        const recipe = recipes.find((r) => r.id === id);
-
-        if (liked.includes(id)) {
-            liked = liked.filter((l) => l !== id);
-            recipe.likes--;
-            $(this).removeClass("liked");
-        } else {
-            liked.push(id);
-            recipe.likes++;
-            $(this).addClass("liked");
-        }
-
-        localStorage.setItem(`likedRecipes_${currentUser}`, JSON.stringify(liked));
-        localStorage.setItem("recipes", JSON.stringify(recipes));
-        $(this).next(".likes-count").text(recipe.likes);
-    });
-
-    $(document).on("click", ".save-icon", function () {
-        const id = $(this).data("id");
-        const currentUser = localStorage.getItem("currentUser");
-        if (!currentUser) return;
-
-        let saved = JSON.parse(localStorage.getItem(`savedRecipes_${currentUser}`) || "[]");
-        if (saved.includes(id)) saved = saved.filter((s) => s !== id);
-        else saved.push(id);
-
-        $(this).toggleClass("saved");
-        localStorage.setItem(`savedRecipes_${currentUser}`, JSON.stringify(saved));
-    });
-
-    // ===== Filters =====
-    $("#categoryFilter").change(function () {
-        const category = $(this).val();
-        const searchTerm = $("#searchInput").val();
-        loadRecipes(category, searchTerm);
-    });
-
+    // Filtering and searching
     $("#searchInput").on("input", function () {
-        const searchTerm = $(this).val();
-        const category = $("#categoryFilter").val();
-        loadRecipes(category, searchTerm);
+      const query = $(this).val().toLowerCase();
+      $.get(`${API_URL}/recipes`, (recipes) => {
+        const filtered = recipes.filter((r) =>
+          r.title.toLowerCase().includes(query)
+        );
+        renderRecipes(filtered);
+      });
+    });
+    $("#categoryFilter").change(function () {
+      const cat = $(this).val();
+      $.get(`${API_URL}/recipes`, (recipes) => {
+        const filtered = cat
+          ? recipes.filter((r) => r.category === cat)
+          : recipes;
+        renderRecipes(filtered);
+      });
     });
 
-    // ===== Navbar Smooth Scroll =====
-    $(".nav-link").click(function (e) {
-        e.preventDefault();
-        const target = $(this).attr("href");
-        if (target.startsWith("#")) {
-            $("html, body").animate({ scrollTop: $(target).offset().top - 70 }, 500);
+    // Save/Unsave recipe handlers
+    $(document).on("click", ".save-btn", function () {
+      let id = Number($(this).data("id"));
+      if (!currentUser.savedRecipes.includes(id))
+        currentUser.savedRecipes.push(id);
+      $.ajax({
+        url: `${API_URL}/users/${currentUser.id}`,
+        method: "PATCH",
+        data: JSON.stringify({ savedRecipes: currentUser.savedRecipes }),
+        contentType: "application/json",
+        success: function (u) {
+          setSession(u);
+          currentUser = u;
+          loadSavedRecipes();
+          loadRecipes();
+        },
+      });
+    });
+
+    $(document).on("click", ".unsave-btn", function () {
+      let id = Number($(this).data("id"));
+      currentUser.savedRecipes = currentUser.savedRecipes.filter(
+        (rid) => rid !== id
+      );
+      $.ajax({
+        url: `${API_URL}/users/${currentUser.id}`,
+        method: "PATCH",
+        data: JSON.stringify({ savedRecipes: currentUser.savedRecipes }),
+        contentType: "application/json",
+        success: function (u) {
+          setSession(u);
+          currentUser = u;
+          loadSavedRecipes();
+          loadRecipes();
+        },
+      });
+    });
+
+    // Add recipe
+    $("#saveRecipeBtn").click(function (e) {
+      e.preventDefault();
+      const title = $("#recipeTitle").val();
+      const category = $("#recipeCategory").val();
+      const ingredients = $("#recipeIngredients").val().split("\n");
+      const instructions = $("#recipeInstructions").val().split("\n");
+      const image = $("#recipeImageURL").val();
+
+      $.post(
+        `${API_URL}/recipes`,
+        {
+          title,
+          category,
+          ingredients,
+          instructions,
+          image,
+        },
+        function (recipe) {
+          $("#addRecipeModal").modal("hide");
+          loadRecipes();
         }
-        if (target === "#saved") loadRecipes("", "", true);
+      );
     });
 
-    // ===== Initialize =====
-    if (window.location.pathname.includes("index.html")) {
-        checkSession();
-        loadRecipes();
-    }
-});*/
+    // Load recipe modal details
+    $(document).on("click", ".view-btn", function () {
+      let id = $(this).data("id");
+      $.get(`${API_URL}/recipes/${id}`, (recipe) => {
+        let html = `
+                <img src="${recipe.image}" class="img-fluid mb-3">
+                <h5>Ingredients</h5>
+                <ul>${(recipe.ingredients || [])
+                  .map((i) => `<li>${i}</li>`)
+                  .join("")}</ul>
+                <h5>Instructions</h5>
+                <ol>${(recipe.instructions || [])
+                  .map((step) => `<li>${step}</li>`)
+                  .join("")}</ol>
+                `;
+        $("#viewRecipeContent").html(html);
+        $("#viewRecipeModal").modal("show");
+      });
+    });
+
+    // Initial load
+    loadRecipes();
+    loadSavedRecipes();
+  });
+}

@@ -1,0 +1,98 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "John Doe",
+      "email": "john@example.com",
+      "username": "johndoe",
+      "password": "example",
+      "savedRecipes": [1, 2]
+    }
+  ],
+  "recipes": [
+    {
+      "id": 1,
+      "title": "Fluffy Pancakes",
+      "category": "Breakfast",
+      "image": "assets/images/pancakes.jpg",
+      "ingredients": ["1 cup flour", "2 tbsp sugar", "1 egg", "1 cup milk"],
+      "instructions": [
+        "Mix all ingredients together.",
+        "Heat a non-stick pan.",
+        "Pour batter, cook until golden."
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Spaghetti Carbonara",
+      "category": "Lunch",
+      "image": "assets/images/spaghetti.jpg",
+      "ingredients": [
+        "Spaghetti",
+        "Eggs",
+        "Pancetta",
+        "Parmesan cheese",
+        "Black pepper"
+      ],
+      "instructions": [
+        "Boil pasta.",
+        "Cook pancetta.",
+        "Mix eggs + cheese.",
+        "Combine everything."
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Chocolate Cake",
+      "category": "Dessert",
+      "image": "assets/images/cake.jpg",
+      "ingredients": ["Flour", "Cocoa powder", "Sugar", "Eggs"],
+      "instructions": [
+        "Mix dry ingredients.",
+        "Add wet ingredients.",
+        "Bake for 30 minutes."
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Brownie Milkshake",
+      "category": "Drinks",
+      "image": "assets/images/Brownie Milkshake.jpg",
+      "ingredients": ["Ice cream", "Milk", "Brownie chunks", "Chocolate syrup"],
+      "instructions": [
+        "Blend all ingredients.",
+        "Top with extra brownie pieces."
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Cinnamon Rolls",
+      "category": "Breakfast",
+      "image": "assets/images/Cinnamon Rolls.jpg",
+      "ingredients": ["See recipe modal details"],
+      "instructions": ["See recipe modal details"]
+    },
+    {
+      "id": 6,
+      "title": "Garlic Butter Chicken",
+      "category": "Dinner",
+      "image": "assets/images/garlic-chicken.jpg",
+      "ingredients": [
+        "4 chicken breasts",
+        "3 tbsp butter",
+        "4 garlic cloves (minced)",
+        "1 tsp paprika",
+        "1 tsp salt",
+        "½ tsp pepper",
+        "Fresh parsley (optional)"
+      ],
+      "instructions": [
+        "Season the chicken with paprika, salt, and pepper.",
+        "Melt butter in a pan and sauté garlic until fragrant.",
+        "Add chicken and cook until golden on both sides.",
+        "Simmer on low heat until chicken is fully cooked.",
+        "Top with chopped parsley and serve warm."
+      ]
+    }
+  ]
+}
