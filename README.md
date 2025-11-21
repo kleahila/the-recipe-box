@@ -1,79 +1,76 @@
 # The Recipe Box 🍳
 
-The Recipe Box is a lightweight web application that allows users to discover, create, and save their favorite recipes. It features a responsive UI built with Bootstrap and uses a local JSON server to simulate a real backend database.
+The Recipe Box is a lightweight web application that lets food lovers discover, create, and save their favorite recipes. The UI is built with Bootstrap, while authentication, protected routes, and data persistence now run on **Firebase Authentication** and **Cloud Firestore**—no local JSON server required.
 
 ## 🚀 Features
 
-- **User Authentication:** Sign up and Login functionality (simulated).
-- **Recipe Dashboard:** View a dynamic grid of recipes.
-- **Search & Filter:** Real-time searching and category filtering.
-- **Recipe Management:**
-  - **Add:** Create new recipes with ingredients, instructions, and images.
-  - **Delete:** Remove recipes from the database.
-  - **Save/Favorite:** Save recipes to a personal "Saved" list.
-- **Responsive Design:** Works on mobile and desktop.
+- **Secure Firebase Auth:** Sign up, login, and logout with real email/password accounts.
+- **Protected Dashboard:** `index.html` automatically redirects unauthenticated visitors back to the landing page.
+- **Recipe CRUD:** Create, read, update (via re-save), and delete recipes stored in Firestore.
+- **Favorites:** Save recipes to a personal favorites list backed by Firestore collections.
+- **Search & Filter:** Client-side filtering by title and category for quick discovery.
+- **Responsive Design:** Bootstrap 5 and custom CSS keep everything looking sharp across devices.
 
 ## 🛠️ Tech Stack
 
 - **Frontend:** HTML5, CSS3, Bootstrap 5, JavaScript (jQuery)
-- **Backend (Mock):** [json-server](https://github.com/typicode/json-server) (Acts as a REST API)
-- **Database:** `db.json` (JSON file storage)
+- **Backend-as-a-Service:** Firebase Authentication + Cloud Firestore
+- **Tooling:** Any static file server (VS Code Live Server, `npx serve`, or your preferred host)
 
 ## 📋 Prerequisites
 
-Before you begin, ensure you have the following installed:
+- A Firebase project with Email/Password authentication enabled
+- A Firestore database (in Native mode)
+- Optional: Node.js if you plan to run a local static server via `npx`
 
-- [Node.js](https://nodejs.org/) (Required to run the JSON server)
+## ⚙️ Setup & Run
 
-## ⚙️ Installation
+1. **Clone the project** and open it in VS Code (or your editor of choice).
+2. **Configure Firebase:**
+   - Open `firebase.js` and replace the placeholder config with your Firebase project's credentials.
+   - Ensure Authentication (Email/Password) and Firestore are enabled in the Firebase console.
+3. **Serve the files:**
+   - Use VS Code's Live Server extension, or run `npx serve .` from the project root, then open the provided URL.
+4. **Create content:** from the dashboard you can add recipes, view them, delete ones you own, and save any recipe to favorites. All data immediately persists to Firestore.
 
-1.  **Clone or Download the repository** to your local machine.
-2.  **Navigate to the project folder** in your terminal:
-    ```bash
-    cd path/to/the-recipe-box
-    ```
-3.  **Install dependencies**:
-    ```bash
-    npm install
-    ```
-    _(This will download `json-server` automatically based on the `package.json` file)_
+## 🔒 Firebase Security Rules (Suggested)
 
-## 🏃‍♂️ How to Run
+Update your Firestore rules so users can only modify their own data:
 
-1.  **Start the Backend Server**:
-    In your terminal, run the following command to start the database:
+```text
+rules_version = '2';
+service cloud.firestore {
+    match /databases/{database}/documents {
+        match /recipes/{recipeId} {
+            allow read: if true;
+            allow write: if request.auth != null && request.auth.uid == request.resource.data.ownerId;
+        }
 
-    ```bash
-    npm start
-    ```
+        match /favorites/{favoriteId} {
+            allow read, write: if request.auth != null && request.auth.uid == request.resource.data.userId;
+        }
 
-    _Alternatively, you can run: `npx json-server --watch db.json --port 3000`_
-
-    You should see a message confirming the server is running at `http://localhost:3000`.
-
-2.  **Launch the Application**:
-    - Open the `landing.html` file in your web browser.
-    - **Note:** For the best experience, it is recommended to use a live server (like the "Live Server" extension in VS Code), but double-clicking the HTML file will also work for this setup.
-
-## 🔑 Demo Credentials
-
-To log in immediately without signing up, use the default user (if configured in your `db.json`):
-
-- **Email:** `john@example.com`
-- **Password:** `password`
+        match /users/{userId} {
+            allow read, write: if request.auth != null && request.auth.uid == userId;
+        }
+    }
+}
+```
 
 ## 📂 Project Structure
 
 ```text
 /the-recipe-box
 │── assets/              # Images, fonts, and extra CSS
-│── db.json              # The database file (Stores users and recipes)
-│── index.html           # Main dashboard (Requires login)
-│── landing.html         # Landing page
+│── firebase.js          # Firebase initialization + exports for auth/db
+│── index.html           # Main dashboard (protected)
+│── landing.html         # Public landing page
 │── login.html           # Login page
 │── signup.html          # Signup page
-│── script.js            # Main logic (API calls, Auth, UI updates)
+│── script.js            # Frontend logic (auth + Firestore CRUD)
 │── style.css            # Custom styling
-│── package.json         # Dependency manager
+│── package.json         # Optional scripts for serving the site
 └── README.md            # Documentation
 ```
+
+Enjoy building and sharing your favorite recipes with real backend superpowers! 🍽️

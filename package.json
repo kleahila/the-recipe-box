@@ -1,12 +1,10 @@
 {
   "name": "the-recipe-box",
   "version": "1.0.0",
-  "description": "A simple recipe management application using HTML, jQuery, and JSON Server.",
+  "description": "A recipe management application powered by Firebase Auth + Firestore.",
   "main": "script.js",
   "scripts": {
-    "start": "json-server --watch db.json --port 3000"
+    "start": "npx serve ."
   },
-  "dependencies": {
-    "json-server": "^0.17.4"
-  }
+  "dependencies": {}
 }
