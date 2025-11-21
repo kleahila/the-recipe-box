@@ -19,19 +19,26 @@ The Recipe Box is a lightweight web application that lets food lovers discover, 
 
 ## 📋 Prerequisites
 
+- Node.js 18+ (needed to install deps and generate the Firebase config)
 - A Firebase project with Email/Password authentication enabled
 - A Firestore database (in Native mode)
-- Optional: Node.js if you plan to run a local static server via `npx`
 
 ## ⚙️ Setup & Run
 
 1. **Clone the project** and open it in VS Code (or your editor of choice).
-2. **Configure Firebase:**
-   - Open `firebase.js` and replace the placeholder config with your Firebase project's credentials.
-   - Ensure Authentication (Email/Password) and Firestore are enabled in the Firebase console.
-3. **Serve the files:**
-   - Use VS Code's Live Server extension, or run `npx serve .` from the project root, then open the provided URL.
-4. **Create content:** from the dashboard you can add recipes, view them, delete ones you own, and save any recipe to favorites. All data immediately persists to Firestore.
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+3. **Configure Firebase secrets:**
+   - Duplicate `.env.example` to `.env` and drop in your Firebase credentials.
+   - The `.env` file is git-ignored so your keys stay out of source control.
+4. **Generate the runtime config + serve files:**
+   ```bash
+   npm start
+   ```
+   This runs `npm run build:config` (which converts `.env` into `firebase-config.js`) and then serves the site locally via `npx serve .`.
+5. **Create content:** from the dashboard you can add recipes, view them, delete ones you own, and save any recipe to favorites. All data immediately persists to Firestore.
 
 ## 🔒 Firebase Security Rules (Suggested)
 
@@ -62,12 +69,15 @@ service cloud.firestore {
 ```text
 /the-recipe-box
 │── assets/              # Images, fonts, and extra CSS
+│── .env.example         # Template for Firebase credentials (copy to .env)
 │── firebase.js          # Firebase initialization + exports for auth/db
+│── firebase-config.js   # Auto-generated from .env (ignored in git)
 │── index.html           # Main dashboard (protected)
 │── landing.html         # Public landing page
 │── login.html           # Login page
 │── signup.html          # Signup page
 │── script.js            # Frontend logic (auth + Firestore CRUD)
+│── scripts/             # Utility scripts (e.g., config generator)
 │── style.css            # Custom styling
 │── package.json         # Optional scripts for serving the site
 └── README.md            # Documentation

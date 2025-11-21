@@ -3,8 +3,14 @@
   "version": "1.0.0",
   "description": "A recipe management application powered by Firebase Auth + Firestore.",
   "main": "script.js",
+  "type": "module",
   "scripts": {
-    "start": "npx serve ."
+    "build:config": "node scripts/generateFirebaseConfig.js",
+    "serve": "npm run build:config && npx serve .",
+    "start": "npm run serve"
   },
-  "dependencies": {}
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "serve": "^14.2.1"
+  }
 }
