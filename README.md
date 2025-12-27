@@ -4,14 +4,14 @@
 
 ![Status](https://img.shields.io/badge/Status-Complete-success)
 ![Stack](https://img.shields.io/badge/Stack-Fullstack_.NET-purple)
-![License](https://img.shields.io/badge/License-Educational-green)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ## 📖 Project Overview
 
 The Recipe Box is a modern, distributed web application that allows users to securely organize, share, and discover recipes. Unlike static websites, this application leverages a robust **N-Tier Architecture** to provide persistent data storage, secure user sessions, and dynamic image handling.
 
 **Academic Context:**
-This project was engineered as a Capstone Project to demonstrate proficiency in RESTful API design, relational database modeling, and containerized deployment.
+This project was engineered as a Capstone Project to demonstrate proficiency in Web Technologies & Programming.
 
 ---
 
@@ -88,6 +88,7 @@ We utilized a **Headless Architecture**, strictly decoupling the frontend client
 the-recipe-box/
 ├── docker-compose.yml   # Orchestrates Backend, DB, and Frontend services
 ├── .gitignore           # Specifies files ignored by Git
+├── LICENSE              # MIT License terms
 ├── README.md            # Project documentation
 ├── frontend/            # Client-Side Application
 │   ├── assets/          # Images and fonts
