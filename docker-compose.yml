@@ -1,0 +1,32 @@
+services:
+  # Service 1: The Database
+  db:
+    image: mysql:8.0
+    container_name: mysql-container
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: studentpass
+      MYSQL_DATABASE: finaldb
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  # Service 2: Your .NET Backend
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: recipebox-api
+    restart: always
+    ports:
+      - "5001:8080" # Maps port 5000 on your laptop to 8080 inside the container
+    environment:
+      # This overrides the setting in appsettings.json dynamically!
+      ConnectionStrings__DefaultConnection: "Server=db;Port=3306;Database=finaldb;User=root;Password=studentpass;"
+      ASPNETCORE_ENVIRONMENT: Development
+    depends_on:
+      - db # Wait for the database to start first
+
+volumes:
+  mysql_data:
