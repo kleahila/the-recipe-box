@@ -1,23 +1,6 @@
-import { auth, db } from "./firebase.js";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  onAuthStateChanged,
-  signOut,
-  updateProfile,
-} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-import {
-  addDoc,
-  collection,
-  deleteDoc,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  serverTimestamp,
-  setDoc,
-  where,
-} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+// ==================== API CONFIGURATION ====================
+// Base URL for the ASP.NET Core API
+const API_BASE_URL = "http://localhost:5000/api";
 
 const fallbackImage = "https://placehold.co/600x400?text=Recipe+Image";
 let allRecipes = [];
@@ -31,10 +14,52 @@ const isSignupPage = path.endsWith("signup.html");
 
 initialize();
 
+// ==================== INITIALIZATION ====================
 function initialize() {
   registerFormHandlers();
   registerUIListeners();
-  monitorAuthState();
+  checkAuthState();
+}
+
+// ==================== AUTH STATE MANAGEMENT ====================
+// Check if user is logged in using JWT token from localStorage
+function checkAuthState() {
+  const token = localStorage.getItem("jwt_token");
+  const userData = localStorage.getItem("user_data");
+
+  if (token && userData) {
+    currentUser = JSON.parse(userData);
+
+    if (isDashboardPage) {
+      loadAllRecipes();
+      loadSavedRecipes();
+    } else if (isLoginPage || isSignupPage) {
+      window.location.href = "index.html";
+    }
+  } else {
+    currentUser = null;
+
+    if (isDashboardPage) {
+      window.location.href = "landing.html";
+    }
+  }
+}
+
+// ==================== HELPER FUNCTIONS ====================
+// Get authorization headers for API requests
+function getAuthHeaders() {
+  const token = localStorage.getItem("jwt_token");
+  return {
+    Authorization: `Bearer ${token}`,
+  };
+}
+
+// Get JSON headers with authorization
+function getJsonAuthHeaders() {
+  return {
+    "Content-Type": "application/json",
+    ...getAuthHeaders(),
+  };
 }
 
 function registerFormHandlers() {
@@ -57,29 +82,16 @@ function registerUIListeners() {
   $(document).on("click", ".unsave-btn", unsaveRecipe);
   $(document).on("click", ".logout", async (event) => {
     event.preventDefault();
-    await signOut(auth);
+    // Clear JWT and user data from localStorage
+    localStorage.removeItem("jwt_token");
+    localStorage.removeItem("user_data");
+    currentUser = null;
     window.location.href = "landing.html";
   });
 }
 
-function monitorAuthState() {
-  onAuthStateChanged(auth, async (user) => {
-    currentUser = user;
-
-    if (isDashboardPage) {
-      if (!user) {
-        window.location.href = "landing.html";
-        return;
-      }
-
-      await loadAllRecipes();
-      await loadSavedRecipes();
-    } else if ((isLoginPage || isSignupPage) && user) {
-      window.location.href = "index.html";
-    }
-  });
-}
-
+// ==================== AUTHENTICATION ====================
+// Register new user via API
 async function handleSignup(event) {
   event.preventDefault();
   const name = $("#signupName").val();
@@ -93,21 +105,29 @@ async function handleSignup(event) {
   }
 
   try {
-    const credential = await createUserWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
+    const response = await fetch(`${API_BASE_URL}/auth/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, password }),
+    });
 
-    if (name) {
-      await updateProfile(credential.user, { displayName: name });
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Registration failed");
     }
 
-    await setDoc(doc(db, "users", credential.user.uid), {
-      name,
-      email,
-      createdAt: serverTimestamp(),
-    });
+    const data = await response.json();
+
+    // Store JWT token and user data in localStorage
+    localStorage.setItem("jwt_token", data.token);
+    localStorage.setItem(
+      "user_data",
+      JSON.stringify({
+        id: data.userId,
+        name: data.name,
+        email: data.email,
+      })
+    );
 
     alert("Signup successful! Redirecting you to your recipes...");
     window.location.href = "index.html";
@@ -117,13 +137,36 @@ async function handleSignup(event) {
   }
 }
 
+// Login user via API
 async function handleLogin(event) {
   event.preventDefault();
   const email = $("#loginUsername").val();
   const password = $("#loginPassword").val();
 
   try {
-    await signInWithEmailAndPassword(auth, email, password);
+    const response = await fetch(`${API_BASE_URL}/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Invalid email or password");
+    }
+
+    const data = await response.json();
+
+    // Store JWT token and user data in localStorage
+    localStorage.setItem("jwt_token", data.token);
+    localStorage.setItem(
+      "user_data",
+      JSON.stringify({
+        id: data.userId,
+        name: data.name,
+        email: data.email,
+      })
+    );
+
     window.location.href = "index.html";
   } catch (error) {
     console.error("Login error", error);
@@ -131,13 +174,17 @@ async function handleLogin(event) {
   }
 }
 
+// ==================== RECIPES ====================
+// Load all recipes from API
 async function loadAllRecipes() {
   try {
-    const snapshot = await getDocs(collection(db, "recipes"));
-    allRecipes = snapshot.docs.map((docSnap) => ({
-      id: docSnap.id,
-      ...docSnap.data(),
-    }));
+    const response = await fetch(`${API_BASE_URL}/recipes`);
+
+    if (!response.ok) {
+      throw new Error("Failed to load recipes");
+    }
+
+    allRecipes = await response.json();
     renderRecipes(allRecipes);
   } catch (error) {
     console.error("Failed to load recipes", error);
@@ -159,10 +206,16 @@ function renderRecipes(recipes) {
   }
 
   recipes.forEach((recipe) => {
+    // Handle image path - prepend API base URL for relative paths
+    let imageSrc = recipe.image || fallbackImage;
+    if (imageSrc && imageSrc.startsWith("/images/")) {
+      imageSrc = `http://localhost:5000${imageSrc}`;
+    }
+
     grid.append(`
       <div class="col-md-4">
         <div class="card h-100 shadow-sm">
-          <img src="${recipe.image}" class="card-img-top" style="height: 200px; object-fit: cover;"
+          <img src="${imageSrc}" class="card-img-top" style="height: 200px; object-fit: cover;"
                onerror="this.onerror=null;this.src='${fallbackImage}';">
           <div class="card-body">
             <h5 class="card-title">${recipe.title}</h5>
@@ -188,6 +241,7 @@ function filterRecipes() {
   renderRecipes(filtered);
 }
 
+// Create new recipe via API with FormData for image upload
 async function saveRecipe() {
   if (!currentUser) {
     alert("Please log in before adding recipes.");
@@ -198,9 +252,8 @@ async function saveRecipe() {
   const category = $("#recipeCategory").val();
   const ingredients = $("#recipeIngredients").val();
   const instructions = $("#recipeInstructions").val();
-  const image =
-    $("#recipeImageURL").val() ||
-    "https://placehold.co/600x400?text=New+Recipe";
+  const imageUrl = $("#recipeImageURL").val();
+  const imageFile = $("#recipeImage")?.[0]?.files?.[0];
 
   if (!title || !ingredients) {
     alert("Please fill in Title and Ingredients");
@@ -208,15 +261,29 @@ async function saveRecipe() {
   }
 
   try {
-    await addDoc(collection(db, "recipes"), {
-      title,
-      category,
-      ingredients,
-      instructions,
-      image,
-      ownerId: currentUser.uid,
-      createdAt: serverTimestamp(),
+    // Use FormData for multipart/form-data request
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("category", category);
+    formData.append("ingredients", ingredients);
+    formData.append("instructions", instructions);
+
+    // Add image file if provided, otherwise use URL
+    if (imageFile) {
+      formData.append("image", imageFile);
+    } else if (imageUrl) {
+      formData.append("imageUrl", imageUrl);
+    }
+
+    const response = await fetch(`${API_BASE_URL}/recipes`, {
+      method: "POST",
+      headers: getAuthHeaders(),
+      body: formData,
     });
+
+    if (!response.ok) {
+      throw new Error("Failed to save recipe");
+    }
 
     $("#addRecipeModal").modal("hide");
     $("#addRecipeForm")[0].reset();
@@ -227,20 +294,27 @@ async function saveRecipe() {
   }
 }
 
+// View recipe details via API
 async function viewRecipe() {
   const recipeId = $(this).data("id");
 
   try {
-    const recipeSnapshot = await getDoc(doc(db, "recipes", recipeId));
-    if (!recipeSnapshot.exists()) {
-      alert("Recipe not found");
-      return;
+    const response = await fetch(`${API_BASE_URL}/recipes/${recipeId}`);
+
+    if (!response.ok) {
+      throw new Error("Recipe not found");
     }
 
-    const recipe = { id: recipeSnapshot.id, ...recipeSnapshot.data() };
+    const recipe = await response.json();
+
+    // Handle image path
+    let imageSrc = recipe.image || fallbackImage;
+    if (imageSrc && imageSrc.startsWith("/images/")) {
+      imageSrc = `http://localhost:5000${imageSrc}`;
+    }
 
     $("#viewRecipeContent").html(`
-      <img src="${recipe.image}" class="img-fluid mb-3" style="max-height: 300px; width: 100%; object-fit: cover;"
+      <img src="${imageSrc}" class="img-fluid mb-3" style="max-height: 300px; width: 100%; object-fit: cover;"
            onerror="this.onerror=null;this.src='${fallbackImage}';">
       <h3>${recipe.title}</h3>
       <span class="badge bg-secondary mb-3">${recipe.category}</span>
@@ -259,6 +333,7 @@ async function viewRecipe() {
   }
 }
 
+// Delete recipe via API
 async function deleteRecipe() {
   const recipeId = $(this).data("id");
   if (!recipeId) return;
@@ -268,27 +343,26 @@ async function deleteRecipe() {
   }
 
   try {
-    const recipeRef = doc(db, "recipes", recipeId);
-    const recipeSnap = await getDoc(recipeRef);
+    const response = await fetch(`${API_BASE_URL}/recipes/${recipeId}`, {
+      method: "DELETE",
+      headers: getAuthHeaders(),
+    });
 
-    if (
-      recipeSnap.exists() &&
-      recipeSnap.data().ownerId &&
-      recipeSnap.data().ownerId !== currentUser?.uid
-    ) {
-      alert("You can only delete recipes you created.");
-      return;
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Failed to delete recipe");
     }
 
-    await deleteDoc(recipeRef);
     $("#viewRecipeModal").modal("hide");
     await Promise.all([loadAllRecipes(), loadSavedRecipes()]);
   } catch (error) {
     console.error("Failed to delete recipe", error);
-    alert("Unable to delete recipe right now.");
+    alert(error.message || "Unable to delete recipe right now.");
   }
 }
 
+// ==================== FAVORITES ====================
+// Add recipe to favorites via API
 async function saveToFavorites() {
   if (!currentUser) {
     alert("Please log in to save recipes.");
@@ -298,24 +372,20 @@ async function saveToFavorites() {
   const recipeId = $(this).data("recipe");
 
   try {
-    const favoritesRef = collection(db, "favorites");
-    const duplicateQuery = query(
-      favoritesRef,
-      where("userId", "==", currentUser.uid),
-      where("recipeId", "==", recipeId)
-    );
-    const duplicateSnapshot = await getDocs(duplicateQuery);
-
-    if (!duplicateSnapshot.empty) {
-      alert("Already in your favorites!");
-      return;
-    }
-
-    await addDoc(favoritesRef, {
-      userId: currentUser.uid,
-      recipeId,
-      savedAt: serverTimestamp(),
+    const response = await fetch(`${API_BASE_URL}/favorites`, {
+      method: "POST",
+      headers: getJsonAuthHeaders(),
+      body: JSON.stringify({ recipeId: parseInt(recipeId) }),
     });
+
+    if (!response.ok) {
+      const error = await response.json();
+      if (error.message?.includes("already")) {
+        alert("Already in your favorites!");
+        return;
+      }
+      throw new Error(error.message || "Failed to save favorite");
+    }
 
     alert("Recipe saved!");
     await loadSavedRecipes();
@@ -326,6 +396,7 @@ async function saveToFavorites() {
   }
 }
 
+// Load user's favorite recipes via API
 async function loadSavedRecipes() {
   const container = $("#savedRecipeGrid");
   if (!container.length || !currentUser) return;
@@ -333,57 +404,43 @@ async function loadSavedRecipes() {
   container.empty();
 
   try {
-    const favoritesRef = collection(db, "favorites");
-    const favoritesQuery = query(
-      favoritesRef,
-      where("userId", "==", currentUser.uid)
-    );
-    const favoriteSnapshot = await getDocs(favoritesQuery);
+    const response = await fetch(`${API_BASE_URL}/favorites`, {
+      headers: getAuthHeaders(),
+    });
 
-    if (favoriteSnapshot.empty) {
+    if (!response.ok) {
+      throw new Error("Failed to load favorites");
+    }
+
+    const favorites = await response.json();
+
+    if (favorites.length === 0) {
       container.html("<p class='text-muted'>No saved recipes yet.</p>");
       return;
     }
 
-    const favoriteCards = await Promise.all(
-      favoriteSnapshot.docs.map(async (favoriteDoc) => {
-        const favoriteData = favoriteDoc.data();
-        try {
-          const recipeDoc = await getDoc(
-            doc(db, "recipes", favoriteData.recipeId)
-          );
+    favorites.forEach((favorite) => {
+      // Handle image path
+      let imageSrc = favorite.recipeImage || fallbackImage;
+      if (imageSrc && imageSrc.startsWith("/images/")) {
+        imageSrc = `http://localhost:5000${imageSrc}`;
+      }
 
-          if (!recipeDoc.exists()) {
-            await deleteDoc(doc(db, "favorites", favoriteDoc.id));
-            return null;
-          }
-
-          const recipe = { id: recipeDoc.id, ...recipeDoc.data() };
-
-          return `
-            <div class="col-md-4 mb-4">
-              <div class="card h-100 shadow-sm border-success">
-                <img src="${recipe.image}" class="card-img-top" style="height: 150px; object-fit: cover;"
-                     onerror="this.onerror=null;this.src='${fallbackImage}';">
-                <div class="card-body d-flex flex-column gap-2">
-                  <h6 class="card-title">${recipe.title}</h6>
-                  <div>
-                    <button class="btn btn-sm btn-danger unsave-btn" data-id="${favoriteDoc.id}">Remove</button>
-                    <button class="btn btn-sm btn-primary viewRecipeBtn" data-id="${recipe.id}">View</button>
-                  </div>
-                </div>
+      container.append(`
+        <div class="col-md-4 mb-4">
+          <div class="card h-100 shadow-sm border-success">
+            <img src="${imageSrc}" class="card-img-top" style="height: 150px; object-fit: cover;"
+                 onerror="this.onerror=null;this.src='${fallbackImage}';">
+            <div class="card-body d-flex flex-column gap-2">
+              <h6 class="card-title">${favorite.recipeTitle}</h6>
+              <div>
+                <button class="btn btn-sm btn-danger unsave-btn" data-id="${favorite.id}">Remove</button>
+                <button class="btn btn-sm btn-primary viewRecipeBtn" data-id="${favorite.recipeId}">View</button>
               </div>
-            </div>`;
-        } catch (error) {
-          console.error("Failed to load saved recipe", error);
-          return null;
-        }
-      })
-    );
-
-    favoriteCards
-      .filter(Boolean)
-      .forEach((cardMarkup) => container.append(cardMarkup));
+            </div>
+          </div>
+        </div>`);
+    });
   } catch (error) {
     console.error("Failed to load favorites", error);
     container.html(
@@ -392,12 +449,21 @@ async function loadSavedRecipes() {
   }
 }
 
+// Remove recipe from favorites via API
 async function unsaveRecipe() {
   const favoriteId = $(this).data("id");
   if (!favoriteId) return;
 
   try {
-    await deleteDoc(doc(db, "favorites", favoriteId));
+    const response = await fetch(`${API_BASE_URL}/favorites/${favoriteId}`, {
+      method: "DELETE",
+      headers: getAuthHeaders(),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to remove favorite");
+    }
+
     await loadSavedRecipes();
   } catch (error) {
     console.error("Failed to remove saved recipe", error);
