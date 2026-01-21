@@ -1,6 +1,65 @@
-@RecipeBox.API_HostAddress = http://localhost:5070
+@baseUrl = http://localhost:5001/api
+@token = {{login.response.body.token}}
 
-GET {{RecipeBox.API_HostAddress}}/weatherforecast/
+### ==================== AUTH ====================
+
+### Register a new user
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "name": "Test User",
+  "email": "test@example.com",
+  "password": "Password123!"
+}
+
+### Login (save token for authenticated requests)
+# @name login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "john@example.com",
+  "password": "password123"
+}
+
+### ==================== RECIPES ====================
+
+### Get all recipes (no auth required)
+GET {{baseUrl}}/recipes
 Accept: application/json
 
-###
+### Get recipe by ID
+GET {{baseUrl}}/recipes/1
+Accept: application/json
+
+### Create a new recipe (requires auth)
+POST {{baseUrl}}/recipes
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "Test Recipe",
+  "category": "Dinner",
+  "ingredients": "Ingredient 1\nIngredient 2",
+  "instructions": "Step 1\nStep 2"
+}
+
+### Delete a recipe (requires auth, must be owner)
+DELETE {{baseUrl}}/recipes/1
+Authorization: Bearer {{token}}
+
+### ==================== FAVORITES ====================
+
+### Get my favorites (requires auth)
+GET {{baseUrl}}/favorites
+Authorization: Bearer {{token}}
+
+### Add to favorites (requires auth)
+POST {{baseUrl}}/favorites/1
+Authorization: Bearer {{token}}
+
+### Remove from favorites (requires auth)
+DELETE {{baseUrl}}/favorites/1
+Authorization: Bearer {{token}}
+

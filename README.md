@@ -1,108 +1,160 @@
 # 🥗 The Recipe Box
 
-> A full-stack culinary management system built with **ASP.NET Core 8**, **MySQL**, and **Docker**.
-
-![Status](https://img.shields.io/badge/Status-Complete-success)
-![Stack](https://img.shields.io/badge/Stack-Fullstack_.NET-purple)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+A full-stack recipe management system built with **ASP.NET Core 9**, **PostgreSQL**, and **Vanilla JavaScript**.
 
 ## 📖 Project Overview
 
-The Recipe Box is a modern, distributed web application that allows users to securely organize, share, and discover recipes. Unlike static websites, this application leverages a robust **N-Tier Architecture** to provide persistent data storage, secure user sessions, and dynamic image handling.
+The Recipe Box allows users to securely organize, share, and discover recipes. Features include user authentication, recipe CRUD operations, image uploads, and a favorites system.
 
-**Academic Context:**
-This project was engineered as a Capstone Project to demonstrate proficiency in Web Technologies & Programming.
+**Academic Context:** Capstone Project for Web Technologies & Programming course.
+
+---
+
+## 🏗️ Architecture
+
+| Layer             | Technology                           |
+| ----------------- | ------------------------------------ |
+| Frontend          | HTML5, CSS3, JavaScript, Bootstrap 5 |
+| Backend           | ASP.NET Core 9, C#                   |
+| Database          | PostgreSQL 16                        |
+| ORM               | Entity Framework Core 9              |
+| Authentication    | JWT (JSON Web Tokens)                |
+| Password Hashing  | BCrypt                               |
+| API Documentation | Swagger/OpenAPI                      |
 
 ---
 
 ## 🚀 Getting Started
 
-Follow these steps to get the project running locally in minutes using Docker.
-
 ### Prerequisites
 
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (Ensure it is running)
-- Git
+- .NET 9 SDK
+- PostgreSQL 16
+- Python 3 (for serving frontend)
 
-### Installation & Run
+### Installation
 
-1.  **Clone the repository**
+1. **Clone the repository**
 
-    ```bash
-    git clone [https://github.com/your-username/the-recipe-box.git](https://github.com/your-username/the-recipe-box.git)
-    cd the-recipe-box
-    ```
+   ```bash
+   git clone https://github.com/your-username/the-recipe-box.git
+   cd the-recipe-box
+   ```
 
-2.  **Run with Docker Compose**
-    This command builds the images, creates the network, and starts the backend (ASP.NET), database (MySQL), and frontend services.
+2. **Create the database**
 
-    ```bash
-    docker-compose up --build
-    ```
+   ```bash
+   createdb recipebox
+   ```
 
-    _Note: The first run may take a few moments as the MySQL container initializes and populates the database._
+3. **Apply database migrations**
 
-3.  **Access the Application**
-    - **Frontend Dashboard:** Open `http://localhost:8080` (Check your terminal for the exact port mapped in compose)
-    - **API Documentation (Swagger):** Open `http://localhost:5000/swagger`
+   ```bash
+   cd backend
+   dotnet ef database update
+   ```
 
----
+4. **Run the backend**
 
-## 🛠️ Architecture & Tech Stack
+   ```bash
+   cd backend
+   dotnet run
+   ```
 
-We utilized a **Headless Architecture**, strictly decoupling the frontend client from the backend services.
+5. **Run the frontend** (in a new terminal)
 
-### **Frontend (Client)**
+   ```bash
+   cd frontend
+   python3 -m http.server 3000
+   ```
 
-- **Core:** HTML5, CSS3, Vanilla JavaScript (ES6+).
-- **Communication:** Asynchronous `Fetch API` consuming REST endpoints.
-- **Design:** Custom Responsive Grid System.
-
-### **Backend (Server)**
-
-- **Framework:** ASP.NET Core 8 Web API.
-- **Language:** C#.
-- **Security:** Stateless JWT (JSON Web Token) Authentication & BCrypt Password Hashing.
-- **ORM:** Entity Framework Core (Code-First).
-
-### **Database (Data)**
-
-- **System:** MySQL 8.0.
-- **Infrastructure:** Docker Containerization for environment consistency.
+6. **Access the application**
+   - Frontend: http://localhost:3000
+   - API Docs: http://localhost:5001/swagger
 
 ---
 
-## ✨ Key Features
+## 🔐 Default Users
 
-1.  **Secure Authentication:** Users can register and login. Passwords are never stored in plain text (Salted & Hashed).
-2.  **Recipe CRUD:** Full Create, Read, Update, Delete functionality for recipes.
-3.  **Image Handling:** Recipes support file uploads, processed and served via the .NET static file handler.
-4.  **Smart Search:** Real-time filtering by category and keywords on the client side.
-5.  **API Documentation:** Integrated **Swagger UI** for testing endpoints directly.
+| Email            | Password    |
+| ---------------- | ----------- |
+| john@example.com | password123 |
+| jane@example.com | password123 |
 
 ---
 
-## 📂 Project Structure
+## 📡 API Endpoints
 
-```text
-the-recipe-box/
-├── docker-compose.yml   # Orchestrates Backend, DB, and Frontend services
-├── .gitignore           # Specifies files ignored by Git
-├── LICENSE              # MIT License terms
-├── README.md            # Project documentation
-├── frontend/            # Client-Side Application
-│   ├── assets/          # Images and fonts
-│   ├── index.html       # Main Dashboard (Protected)
-│   ├── landing.html     # Public Home Page
-│   ├── login.html       # Auth Interface
-│   ├── script.js        # Core Logic (API calls)
-│   └── style.css        # Responsive Styling
-│
-└── backend/             # Server-Side Application
-    ├── Controllers/     # API Endpoints
-    ├── Services/        # Business Logic
-    ├── Data/            # DB Context & Repositories
-    ├── Domain/          # Database Models
-    ├── Program.cs       # App Configuration
-    └── Dockerfile       # Container Config
+### Authentication
+
+| Method | Endpoint           | Description       |
+| ------ | ------------------ | ----------------- |
+| POST   | /api/auth/register | Register new user |
+| POST   | /api/auth/login    | Login and get JWT |
+
+### Recipes
+
+| Method | Endpoint          | Auth | Description                |
+| ------ | ----------------- | ---- | -------------------------- |
+| GET    | /api/recipes      | No   | Get all recipes            |
+| GET    | /api/recipes/{id} | No   | Get recipe by ID           |
+| POST   | /api/recipes      | Yes  | Create new recipe          |
+| PUT    | /api/recipes/{id} | Yes  | Update recipe (owner only) |
+| DELETE | /api/recipes/{id} | Yes  | Delete recipe (owner only) |
+
+### Favorites
+
+| Method | Endpoint                  | Auth | Description           |
+| ------ | ------------------------- | ---- | --------------------- |
+| GET    | /api/favorites            | Yes  | Get user's favorites  |
+| POST   | /api/favorites/{recipeId} | Yes  | Add to favorites      |
+| DELETE | /api/favorites/{recipeId} | Yes  | Remove from favorites |
+
+---
+
+## 📁 Project Structure
+
 ```
+the-recipe-box/
+├── backend/
+│   ├── Controllers/       # API endpoints
+│   ├── Services/          # Business logic
+│   ├── Data/Repositories/ # Data access layer
+│   ├── Domain/Entities/   # Database models
+│   ├── DTOs/              # Data transfer objects
+│   └── Program.cs         # App configuration
+├── frontend/
+│   ├── index.html         # Main dashboard
+│   ├── login.html         # Login page
+│   ├── signup.html        # Registration page
+│   ├── script.js          # Main JavaScript
+│   └── style.css          # Styles
+└── README.md
+```
+
+---
+
+## 🔒 Security Features
+
+- **Password Hashing** - BCrypt with salt
+- **JWT Authentication** - Stateless, secure tokens
+- **Authorization** - Only owners can modify their recipes
+- **SQL Injection Prevention** - EF Core parameterized queries
+- **CORS Configuration** - Controlled cross-origin access
+
+---
+
+## 🎓 Learning Outcomes
+
+1. **RESTful API Design** - CRUD operations with proper HTTP methods
+2. **N-Tier Architecture** - Controllers → Services → Repositories
+3. **Database Design** - Relational data modeling with foreign keys
+4. **Authentication & Authorization** - JWT-based security
+5. **Frontend-Backend Integration** - Fetch API, async/await
+6. **Error Handling** - Proper HTTP status codes
+
+---
+
+## 📝 License
+
+MIT License - see [LICENSE](LICENSE) file.

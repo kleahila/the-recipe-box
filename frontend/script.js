@@ -126,7 +126,7 @@ async function handleSignup(event) {
         id: data.userId,
         name: data.name,
         email: data.email,
-      })
+      }),
     );
 
     alert("Signup successful! Redirecting you to your recipes...");
@@ -164,7 +164,7 @@ async function handleLogin(event) {
         id: data.userId,
         name: data.name,
         email: data.email,
-      })
+      }),
     );
 
     window.location.href = "index.html";
@@ -200,7 +200,7 @@ function renderRecipes(recipes) {
 
   if (recipes.length === 0) {
     grid.append(
-      "<div class='col-12 text-center text-muted'>No recipes found.</div>"
+      "<div class='col-12 text-center text-muted'>No recipes found.</div>",
     );
     return;
   }
@@ -444,7 +444,7 @@ async function loadSavedRecipes() {
   } catch (error) {
     console.error("Failed to load favorites", error);
     container.html(
-      "<p class='text-danger'>Unable to load saved recipes right now.</p>"
+      "<p class='text-danger'>Unable to load saved recipes right now.</p>",
     );
   }
 }
