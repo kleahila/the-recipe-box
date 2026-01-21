@@ -2,8 +2,8 @@
 
 /* Fonts */
 @font-face {
-  font-family: 'Bebas Neue';
-  src: url('assets/fonts/BebasNeue-Regular.ttf') format('truetype');
+  font-family: "Bebas Neue";
+  src: url("assets/fonts/BebasNeue-Regular.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
@@ -19,12 +19,17 @@
 /* Global Styles */
 body {
   background-color: var(--cream);
-  font-family: 'Arial', sans-serif;
+  font-family: "Arial", sans-serif;
   color: var(--redwood);
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'Bebas Neue', sans-serif;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Bebas Neue", sans-serif;
 }
 
 /* Navbar */
@@ -32,7 +37,8 @@ h1, h2, h3, h4, h5, h6 {
   background-color: var(--dark-cyan) !important;
 }
 
-.navbar-brand, .nav-link {
+.navbar-brand,
+.nav-link {
   color: var(--cream) !important;
 }
 
@@ -42,8 +48,9 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Hero Section */
 .hero {
-  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
-      url('assets/images/dashboard.jpg'); 
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+    url("assets/images/dashboard.jpg");
   position: relative;
   background-size: cover;
 }
@@ -53,7 +60,9 @@ h1, h2, h3, h4, h5, h6 {
   border: none;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .card:hover {
@@ -65,7 +74,9 @@ h1, h2, h3, h4, h5, h6 {
 .btn-primary {
   background-color: var(--sandy-brown);
   border-color: var(--sandy-brown);
-  transition: background-color 0.3s ease, border-color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
 }
 
 .btn-primary:hover {
@@ -124,12 +135,14 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Icons */
-.like-icon, .save-icon {
+.like-icon,
+.save-icon {
   cursor: pointer;
   transition: color 0.3s ease;
 }
 
-.like-icon:hover, .save-icon:hover {
+.like-icon:hover,
+.save-icon:hover {
   color: var(--sandy-brown);
 }
 
@@ -145,15 +158,15 @@ h1, h2, h3, h4, h5, h6 {
 .modal-content {
   border-radius: 10px;
   text-align: center;
-} 
+}
 
 /* Make the recipe image look elegant */
 .modal-body img {
-    width: 100%;
-    max-width: 650px;
-    border-radius: 12px;
-    margin-bottom: 25px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 650px;
+  border-radius: 12px;
+  margin-bottom: 25px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
 }
 
 /* Testimonials */
@@ -195,54 +208,58 @@ footer {
 
 /* Make all recipe images the same height */
 .card-img-top {
-    width: 100%;
-    height: 220px;  /* adjust as you like */
-    object-fit: cover;
-    border-bottom: 1px solid #ddd;
+  width: 100%;
+  height: 220px; /* adjust as you like */
+  object-fit: cover;
+  border-bottom: 1px solid #ddd;
 }
 
 /* Ensure all cards look uniform */
 .card {
-    border-radius: 10px;
-    overflow: hidden;
+  border-radius: 10px;
+  overflow: hidden;
 }
 
 /* Optional: make card heights equal */
 .card.h-100 {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .card-body {
-    flex-grow: 1;
+  flex-grow: 1;
 }
 
 /* Space between cards */
 #recipeGrid1 .col-md-4 {
-    margin-bottom: 25px;
+  margin-bottom: 25px;
 }
 
 /* Make the whole page fill the screen */
-html, body {
-    height: 100%;
-    margin: 0;
+html,
+body {
+  height: 100%;
+  margin: 0;
 }
 
 /* Flex container for page layout */
 body {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Main content expands so footer goes to bottom */
 main {
-    flex: 1;
+  flex: 1;
 }
 
-
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .slide-up {
@@ -250,8 +267,14 @@ main {
 }
 
 @keyframes slideUp {
-  from { transform: translateY(20px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 /* Responsive Design */
@@ -265,3 +288,167 @@ main {
   }
 }
 
+/* ==================== UX IMPROVEMENTS ==================== */
+
+/* Smooth page transitions */
+* {
+  scroll-behavior: smooth;
+}
+
+/* Section headers with nice styling */
+section h2 {
+  position: relative;
+  display: inline-block;
+  padding-bottom: 10px;
+}
+
+section h2::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 60px;
+  height: 4px;
+  background: var(--sandy-brown);
+  border-radius: 2px;
+}
+
+/* Favorite count badge styling */
+.badge.bg-danger {
+  background: linear-gradient(135deg, #e74c3c, #c0392b) !important;
+}
+
+.badge.bg-success {
+  background: linear-gradient(135deg, #27ae60, #1e8449) !important;
+}
+
+/* Card image overlay effect */
+.card .card-img-top {
+  transition: transform 0.3s ease;
+}
+
+.card:hover .card-img-top {
+  transform: scale(1.05);
+}
+
+.card {
+  overflow: hidden;
+}
+
+/* Button loading state */
+.btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Form inputs styling */
+.form-control,
+.form-select {
+  border-radius: 8px;
+  border: 2px solid #e0e0e0;
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--dark-cyan);
+  box-shadow: 0 0 0 3px rgba(84, 134, 135, 0.15);
+}
+
+/* Recipe owner badge */
+.badge.bg-success {
+  font-size: 0.75rem;
+  padding: 0.4em 0.8em;
+}
+
+/* My Recipes section styling */
+#myrecipes {
+  background: linear-gradient(to bottom, #ffffff, #f8f9fa);
+}
+
+#myrecipes h2 {
+  color: var(--dark-cyan);
+}
+
+/* Saved Recipes section */
+#saved h2 {
+  color: var(--redwood);
+}
+
+/* Empty state styling */
+.text-muted {
+  font-style: italic;
+}
+
+/* Modal improvements */
+.modal-header {
+  background: linear-gradient(135deg, var(--dark-cyan), #3d6465);
+  color: white;
+  border-radius: 10px 10px 0 0;
+}
+
+.modal-header .btn-close {
+  filter: invert(1);
+}
+
+.modal-title {
+  font-weight: bold;
+}
+
+/* Recipe detail modal badges */
+#viewRecipeContent .badge {
+  font-size: 0.85rem;
+  padding: 0.5em 1em;
+}
+
+/* Navbar active state */
+.nav-link.active {
+  color: var(--sandy-brown) !important;
+  font-weight: bold;
+}
+
+/* Card title truncation for long names */
+.card-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+/* Hover tooltip effect */
+[title] {
+  cursor: help;
+}
+
+/* Loading skeleton animation (for future use) */
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: 200px 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200px 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Print styles */
+@media print {
+  .navbar,
+  footer,
+  .btn,
+  .modal-footer {
+    display: none !important;
+  }
+
+  .modal {
+    position: static !important;
+    display: block !important;
+  }
+}
