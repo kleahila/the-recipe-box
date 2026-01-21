@@ -403,6 +403,16 @@ section h2::after {
   padding: 0.5em 1em;
 }
 
+/* Origin badge styling */
+.origin-badge {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-size: 0.8rem;
+  padding: 0.4em 0.8em;
+  border-radius: 12px;
+  font-weight: 500;
+}
+
 /* Navbar active state */
 .nav-link.active {
   color: var(--sandy-brown) !important;

@@ -235,6 +235,10 @@ async function loadMyRecipes() {
           ? `<span class="badge bg-danger"><i class="bi bi-heart-fill"></i> ${favoriteCount}</span>`
           : `<span class="badge bg-secondary"><i class="bi bi-heart"></i> 0</span>`;
 
+      const originBadge = recipe.origin
+        ? `<span class="badge origin-badge">${recipe.origin}</span>`
+        : "";
+
       grid.append(`
         <div class="col-md-4 mb-4">
           <div class="card h-100 shadow-sm border-success">
@@ -245,7 +249,10 @@ async function loadMyRecipes() {
                 <h5 class="card-title mb-0">${recipe.title}</h5>
                 ${favBadge}
               </div>
-              <p class="card-text text-muted">${recipe.category}</p>
+              <div class="mb-2">
+                <span class="badge bg-secondary">${recipe.category}</span>
+                ${originBadge}
+              </div>
               <button class="btn btn-primary btn-sm viewRecipeBtn" data-id="${recipe.id}">View</button>
             </div>
           </div>
@@ -292,6 +299,11 @@ function renderRecipes(recipes) {
         ? `<span class="badge bg-danger"><i class="bi bi-heart-fill"></i> ${favoriteCount}</span>`
         : `<span class="badge bg-secondary"><i class="bi bi-heart"></i> 0</span>`;
 
+    // Origin badge
+    const originBadge = recipe.origin
+      ? `<span class="badge origin-badge">${recipe.origin}</span>`
+      : "";
+
     grid.append(`
       <div class="col-md-4">
         <div class="card h-100 shadow-sm ${isOwner ? "border-success" : ""}">
@@ -302,7 +314,10 @@ function renderRecipes(recipes) {
               <h5 class="card-title mb-0">${recipe.title}</h5>
               ${favBadge}
             </div>
-            <p class="card-text text-muted">${recipe.category}</p>
+            <div class="mb-2">
+              <span class="badge bg-secondary">${recipe.category}</span>
+              ${originBadge}
+            </div>
             <p class="card-text">${ownerBadge}</p>
             <button class="btn btn-primary viewRecipeBtn" data-id="${recipe.id}">View Recipe</button>
           </div>
@@ -345,6 +360,7 @@ async function saveRecipe() {
 
   const title = $("#recipeTitle").val();
   const category = $("#recipeCategory").val();
+  const origin = $("#recipeOrigin").val();
   const ingredients = $("#recipeIngredients").val();
   const instructions = $("#recipeInstructions").val();
   const imageUrl = $("#recipeImageURL").val();
@@ -362,6 +378,9 @@ async function saveRecipe() {
     formData.append("category", category);
     formData.append("ingredients", ingredients);
     formData.append("instructions", instructions);
+    if (origin) {
+      formData.append("origin", origin);
+    }
 
     // Add image file if provided, otherwise use URL
     if (imageFile) {
@@ -419,12 +438,18 @@ async function viewRecipe() {
     const favoriteCount = recipe.favoriteCount || 0;
     const favInfo = `<span class="badge bg-danger"><i class="bi bi-heart-fill"></i> ${favoriteCount} ${favoriteCount === 1 ? "favorite" : "favorites"}</span>`;
 
+    // Origin badge
+    const originInfo = recipe.origin
+      ? `<span class="badge origin-badge">${recipe.origin}</span>`
+      : "";
+
     $("#viewRecipeContent").html(`
       <img src="${imageSrc}" class="img-fluid mb-3" style="max-height: 300px; width: 100%; object-fit: cover;"
            onerror="this.onerror=null;this.src='${fallbackImage}';">
       <h3>${recipe.title}</h3>
       <div class="mb-3 d-flex gap-2 flex-wrap align-items-center">
         <span class="badge bg-secondary">${recipe.category}</span>
+        ${originInfo}
         ${favInfo}
         ${ownerInfo}
       </div>
@@ -606,6 +631,7 @@ function openEditModal() {
   $("#editRecipeId").val(recipe.id);
   $("#editRecipeTitle").val(recipe.title);
   $("#editRecipeCategory").val(recipe.category);
+  $("#editRecipeOrigin").val(recipe.origin || "");
   $("#editRecipeIngredients").val(recipe.ingredients);
   $("#editRecipeInstructions").val(recipe.instructions);
   $("#editRecipeImageURL").val("");
@@ -628,6 +654,7 @@ async function updateRecipe() {
   const recipeId = $("#editRecipeId").val();
   const title = $("#editRecipeTitle").val();
   const category = $("#editRecipeCategory").val();
+  const origin = $("#editRecipeOrigin").val();
   const ingredients = $("#editRecipeIngredients").val();
   const instructions = $("#editRecipeInstructions").val();
   const imageUrl = $("#editRecipeImageURL").val();
@@ -645,6 +672,9 @@ async function updateRecipe() {
     formData.append("category", category);
     formData.append("ingredients", ingredients);
     formData.append("instructions", instructions);
+    if (origin) {
+      formData.append("origin", origin);
+    }
 
     // Add image file if provided, otherwise use URL
     if (imageFile) {

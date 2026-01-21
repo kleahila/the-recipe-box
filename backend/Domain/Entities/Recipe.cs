@@ -26,6 +26,9 @@ public class Recipe
     [MaxLength(500)]
     public string? ImagePath { get; set; }
 
+    [MaxLength(50)]
+    public string? Origin { get; set; }
+
     [ForeignKey("Owner")]
     public int OwnerId { get; set; }
 

@@ -25,6 +25,12 @@ public class CreateRecipeDto
     /// Optional image URL (used when not uploading a file).
     /// </summary>
     public string? ImageUrl { get; set; }
+
+    /// <summary>
+    /// Origin/cuisine of the recipe (e.g., Italian, Mexican).
+    /// </summary>
+    [MaxLength(50)]
+    public string? Origin { get; set; }
 }
 
 /// <summary>
@@ -46,6 +52,12 @@ public class UpdateRecipeDto
     /// Optional image URL (used when not uploading a file).
     /// </summary>
     public string? ImageUrl { get; set; }
+
+    /// <summary>
+    /// Origin/cuisine of the recipe (e.g., Italian, Mexican).
+    /// </summary>
+    [MaxLength(50)]
+    public string? Origin { get; set; }
 }
 
 /// <summary>
@@ -56,6 +68,7 @@ public class RecipeDto
     public int Id { get; set; }
     public string Title { get; set; } = string.Empty;
     public string Category { get; set; } = string.Empty;
+    public string? Origin { get; set; }
     public string Ingredients { get; set; } = string.Empty;
     public string Instructions { get; set; } = string.Empty;
     public string? Image { get; set; }
