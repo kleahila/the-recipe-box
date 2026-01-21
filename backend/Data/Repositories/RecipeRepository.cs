@@ -16,6 +16,7 @@ public class RecipeRepository : Repository<Recipe>, IRecipeRepository
     {
         return await _dbSet
             .Include(r => r.Owner)
+            .Include(r => r.Favorites)
             .FirstOrDefaultAsync(r => r.Id == id);
     }
 
@@ -23,6 +24,17 @@ public class RecipeRepository : Repository<Recipe>, IRecipeRepository
     {
         return await _dbSet
             .Include(r => r.Owner)
+            .Include(r => r.Favorites)
+            .OrderByDescending(r => r.CreatedAt)
+            .ToListAsync();
+    }
+
+    public async Task<IEnumerable<Recipe>> GetByOwnerIdAsync(int ownerId)
+    {
+        return await _dbSet
+            .Include(r => r.Owner)
+            .Include(r => r.Favorites)
+            .Where(r => r.OwnerId == ownerId)
             .OrderByDescending(r => r.CreatedAt)
             .ToListAsync();
     }

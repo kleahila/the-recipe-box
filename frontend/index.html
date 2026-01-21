@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -30,20 +30,27 @@
         <div id="nav" class="collapse navbar-collapse">
           <ul class="navbar-nav ms-auto">
             <li class="nav-item">
-              <a class="nav-link active" href="#home"
+              <a class="nav-link active" href="#home" title="Home"
                 ><i class="bi bi-house-door-fill"></i
               ></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#recipes"><i class="bi bi-list"></i></a>
+              <a class="nav-link" href="#recipes" title="All Recipes"
+                ><i class="bi bi-list"></i
+              ></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#saved"
+              <a class="nav-link" href="#myrecipes" title="My Recipes"
+                ><i class="bi bi-person-fill"></i
+              ></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#saved" title="Saved Recipes"
                 ><i class="bi bi-bookmark-heart-fill"></i
               ></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link logout" href="landing.html"
+              <a class="nav-link logout" href="landing.html" title="Logout"
                 ><i class="bi bi-box-arrow-right"></i
               ></a>
             </li>
@@ -62,7 +69,7 @@
     <section id="recipes" class="py-5">
       <div class="container">
         <div class="d-flex justify-content-between align-items-center mb-4">
-          <h2>Recipes</h2>
+          <h2>All Recipes</h2>
           <button
             class="btn btn-primary"
             data-bs-toggle="modal"
@@ -73,14 +80,14 @@
         </div>
 
         <div class="row mb-4">
-          <div class="col-md-6">
+          <div class="col-md-4">
             <input
               id="searchInput"
               class="form-control"
               placeholder="Search recipes..."
             />
           </div>
-          <div class="col-md-6">
+          <div class="col-md-4">
             <select id="categoryFilter" class="form-select">
               <option value="">All Categories</option>
               <option>Breakfast</option>
@@ -90,15 +97,33 @@
               <option>Drinks</option>
             </select>
           </div>
+          <div class="col-md-4">
+            <select id="sortFilter" class="form-select">
+              <option value="recent">Most Recent</option>
+              <option value="popular">Most Favorited</option>
+              <option value="az">A-Z</option>
+            </select>
+          </div>
         </div>
 
         <div id="recipeGrid" class="row g-4"></div>
       </div>
     </section>
 
+    <!-- My Recipes Section -->
+    <section id="myrecipes" class="py-5 bg-white">
+      <div class="container">
+        <h2><i class="bi bi-person-fill"></i> My Recipes</h2>
+        <p class="text-muted">
+          Recipes you've created - you can edit or delete these.
+        </p>
+        <div id="myRecipeGrid" class="row g-4"></div>
+      </div>
+    </section>
+
     <section id="saved" class="py-5 bg-light">
       <div class="container">
-        <h2>Saved Recipes</h2>
+        <h2><i class="bi bi-bookmark-heart-fill"></i> Saved Recipes</h2>
         <div id="savedRecipeGrid" class="row"></div>
       </div>
     </section>
@@ -119,7 +144,20 @@
             <button class="btn btn-secondary" data-bs-dismiss="modal">
               Close
             </button>
-            <button class="btn btn-danger" id="deleteRecipeBtn">Delete</button>
+            <button
+              class="btn btn-warning"
+              id="editRecipeBtn"
+              style="display: none"
+            >
+              Edit
+            </button>
+            <button
+              class="btn btn-danger"
+              id="deleteRecipeBtn"
+              style="display: none"
+            >
+              Delete
+            </button>
           </div>
         </div>
       </div>
@@ -191,6 +229,80 @@
             </button>
             <button class="btn btn-primary" id="saveRecipeBtn">
               Save Recipe
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Recipe Modal -->
+    <div class="modal fade" id="editRecipeModal">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Edit Recipe</h5>
+            <button class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <form id="editRecipeForm">
+              <input type="hidden" id="editRecipeId" />
+              <div class="mb-3">
+                <label class="form-label">Title</label>
+                <input id="editRecipeTitle" class="form-control" required />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Category</label>
+                <select id="editRecipeCategory" class="form-select" required>
+                  <option>Breakfast</option>
+                  <option>Lunch</option>
+                  <option>Dinner</option>
+                  <option>Dessert</option>
+                  <option>Drinks</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Ingredients</label>
+                <textarea
+                  id="editRecipeIngredients"
+                  class="form-control"
+                  rows="4"
+                  required
+                ></textarea>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Instructions</label>
+                <textarea
+                  id="editRecipeInstructions"
+                  class="form-control"
+                  rows="6"
+                  required
+                ></textarea>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Image URL (Optional)</label>
+                <input
+                  id="editRecipeImageURL"
+                  class="form-control"
+                  placeholder="Leave blank to keep current"
+                />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Or Upload New Image (Optional)</label>
+                <input
+                  id="editRecipeImage"
+                  type="file"
+                  class="form-control"
+                  accept="image/*"
+                />
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal">
+              Cancel
+            </button>
+            <button class="btn btn-primary" id="updateRecipeBtn">
+              Save Changes
             </button>
           </div>
         </div>

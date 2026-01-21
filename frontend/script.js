@@ -32,6 +32,7 @@ function checkAuthState() {
 
     if (isDashboardPage) {
       loadAllRecipes();
+      loadMyRecipes();
       loadSavedRecipes();
     } else if (isLoginPage || isSignupPage) {
       window.location.href = "index.html";
@@ -73,12 +74,17 @@ function registerFormHandlers() {
 }
 
 function registerUIListeners() {
-  $("#searchInput, #categoryFilter").on("input change", filterRecipes);
+  $("#searchInput, #categoryFilter, #sortFilter").on(
+    "input change",
+    filterRecipes,
+  );
 
   $(document).on("click", "#saveRecipeBtn", saveRecipe);
   $(document).on("click", ".viewRecipeBtn", viewRecipe);
   $(document).on("click", "#deleteRecipeBtn", deleteRecipe);
   $(document).on("click", ".save-to-favorites-btn", saveToFavorites);
+  $(document).on("click", "#editRecipeBtn", openEditModal);
+  $(document).on("click", "#updateRecipeBtn", updateRecipe);
   $(document).on("click", ".unsave-btn", unsaveRecipe);
   $(document).on("click", ".logout", async (event) => {
     event.preventDefault();
@@ -192,6 +198,67 @@ async function loadAllRecipes() {
   }
 }
 
+// Load current user's recipes
+async function loadMyRecipes() {
+  const grid = $("#myRecipeGrid");
+  if (!grid.length || !currentUser) return;
+
+  grid.empty();
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/recipes/my`, {
+      headers: getAuthHeaders(),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to load your recipes");
+    }
+
+    const myRecipes = await response.json();
+
+    if (myRecipes.length === 0) {
+      grid.html(
+        "<div class='col-12 text-center text-muted'>You haven't created any recipes yet. Click \"Add Recipe\" to get started!</div>",
+      );
+      return;
+    }
+
+    myRecipes.forEach((recipe) => {
+      let imageSrc = recipe.image || fallbackImage;
+      if (imageSrc && imageSrc.startsWith("/images/")) {
+        imageSrc = `http://localhost:5001${imageSrc}`;
+      }
+
+      const favoriteCount = recipe.favoriteCount || 0;
+      const favBadge =
+        favoriteCount > 0
+          ? `<span class="badge bg-danger"><i class="bi bi-heart-fill"></i> ${favoriteCount}</span>`
+          : `<span class="badge bg-secondary"><i class="bi bi-heart"></i> 0</span>`;
+
+      grid.append(`
+        <div class="col-md-4 mb-4">
+          <div class="card h-100 shadow-sm border-success">
+            <img src="${imageSrc}" class="card-img-top" style="height: 200px; object-fit: cover;"
+                 onerror="this.onerror=null;this.src='${fallbackImage}';">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <h5 class="card-title mb-0">${recipe.title}</h5>
+                ${favBadge}
+              </div>
+              <p class="card-text text-muted">${recipe.category}</p>
+              <button class="btn btn-primary btn-sm viewRecipeBtn" data-id="${recipe.id}">View</button>
+            </div>
+          </div>
+        </div>`);
+    });
+  } catch (error) {
+    console.error("Failed to load your recipes", error);
+    grid.html(
+      "<p class='text-danger'>Unable to load your recipes right now.</p>",
+    );
+  }
+}
+
 function renderRecipes(recipes) {
   const grid = $("#recipeGrid");
   if (!grid.length) return;
@@ -212,14 +279,31 @@ function renderRecipes(recipes) {
       imageSrc = `http://localhost:5001${imageSrc}`;
     }
 
+    // Check if current user owns this recipe
+    const isOwner = currentUser && currentUser.id === recipe.ownerId;
+    const ownerBadge = isOwner
+      ? '<span class="badge bg-success ms-2">Your Recipe</span>'
+      : `<small class="text-muted">by ${recipe.ownerName || "Unknown"}</small>`;
+
+    // Favorite count badge
+    const favoriteCount = recipe.favoriteCount || 0;
+    const favBadge =
+      favoriteCount > 0
+        ? `<span class="badge bg-danger"><i class="bi bi-heart-fill"></i> ${favoriteCount}</span>`
+        : `<span class="badge bg-secondary"><i class="bi bi-heart"></i> 0</span>`;
+
     grid.append(`
       <div class="col-md-4">
-        <div class="card h-100 shadow-sm">
+        <div class="card h-100 shadow-sm ${isOwner ? "border-success" : ""}">
           <img src="${imageSrc}" class="card-img-top" style="height: 200px; object-fit: cover;"
                onerror="this.onerror=null;this.src='${fallbackImage}';">
           <div class="card-body">
-            <h5 class="card-title">${recipe.title}</h5>
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <h5 class="card-title mb-0">${recipe.title}</h5>
+              ${favBadge}
+            </div>
             <p class="card-text text-muted">${recipe.category}</p>
+            <p class="card-text">${ownerBadge}</p>
             <button class="btn btn-primary viewRecipeBtn" data-id="${recipe.id}">View Recipe</button>
           </div>
         </div>
@@ -231,12 +315,23 @@ function filterRecipes() {
   if (!allRecipes.length) return;
   const term = $("#searchInput").val()?.toLowerCase() || "";
   const category = $("#categoryFilter").val() || "";
+  const sort = $("#sortFilter").val() || "recent";
 
-  const filtered = allRecipes.filter((recipe) => {
+  let filtered = allRecipes.filter((recipe) => {
     const matchesTerm = recipe.title?.toLowerCase().includes(term);
     const matchesCategory = !category || recipe.category === category;
     return matchesTerm && matchesCategory;
   });
+
+  // Sort based on selection
+  if (sort === "popular") {
+    filtered.sort((a, b) => (b.favoriteCount || 0) - (a.favoriteCount || 0));
+  } else if (sort === "az") {
+    filtered.sort((a, b) => a.title.localeCompare(b.title));
+  } else {
+    // recent - sort by date (already sorted from API, but ensure it)
+    filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  }
 
   renderRecipes(filtered);
 }
@@ -288,6 +383,7 @@ async function saveRecipe() {
     $("#addRecipeModal").modal("hide");
     $("#addRecipeForm")[0].reset();
     await loadAllRecipes();
+    await loadMyRecipes();
   } catch (error) {
     console.error("Failed to save recipe", error);
     alert("Unable to save recipe right now.");
@@ -313,11 +409,25 @@ async function viewRecipe() {
       imageSrc = `http://localhost:5001${imageSrc}`;
     }
 
+    // Check if current user owns this recipe
+    const isOwner = currentUser && currentUser.id === recipe.ownerId;
+    const ownerInfo = isOwner
+      ? '<span class="badge bg-success">Your Recipe</span>'
+      : `<span class="text-muted">by ${recipe.ownerName || "Unknown"}</span>`;
+
+    // Favorite count
+    const favoriteCount = recipe.favoriteCount || 0;
+    const favInfo = `<span class="badge bg-danger"><i class="bi bi-heart-fill"></i> ${favoriteCount} ${favoriteCount === 1 ? "favorite" : "favorites"}</span>`;
+
     $("#viewRecipeContent").html(`
       <img src="${imageSrc}" class="img-fluid mb-3" style="max-height: 300px; width: 100%; object-fit: cover;"
            onerror="this.onerror=null;this.src='${fallbackImage}';">
       <h3>${recipe.title}</h3>
-      <span class="badge bg-secondary mb-3">${recipe.category}</span>
+      <div class="mb-3 d-flex gap-2 flex-wrap align-items-center">
+        <span class="badge bg-secondary">${recipe.category}</span>
+        ${favInfo}
+        ${ownerInfo}
+      </div>
       <h5>Ingredients</h5>
       <pre style="white-space: pre-wrap; font-family: inherit;">${recipe.ingredients}</pre>
       <h5>Instructions</h5>
@@ -325,7 +435,19 @@ async function viewRecipe() {
       <button class="btn btn-success w-100 mt-3 save-to-favorites-btn" data-recipe="${recipe.id}">Save to Favorites</button>
     `);
 
+    // Store recipe data for editing
+    $("#editRecipeBtn").data("recipe", recipe);
     $("#deleteRecipeBtn").data("id", recipe.id);
+
+    // Show/hide edit and delete buttons based on ownership
+    if (isOwner) {
+      $("#editRecipeBtn").show();
+      $("#deleteRecipeBtn").show();
+    } else {
+      $("#editRecipeBtn").hide();
+      $("#deleteRecipeBtn").hide();
+    }
+
     $("#viewRecipeModal").modal("show");
   } catch (error) {
     console.error("Failed to load recipe", error);
@@ -354,7 +476,7 @@ async function deleteRecipe() {
     }
 
     $("#viewRecipeModal").modal("hide");
-    await Promise.all([loadAllRecipes(), loadSavedRecipes()]);
+    await Promise.all([loadAllRecipes(), loadMyRecipes(), loadSavedRecipes()]);
   } catch (error) {
     console.error("Failed to delete recipe", error);
     alert(error.message || "Unable to delete recipe right now.");
@@ -468,5 +590,86 @@ async function unsaveRecipe() {
   } catch (error) {
     console.error("Failed to remove saved recipe", error);
     alert("Unable to remove recipe right now.");
+  }
+}
+
+// ==================== EDIT RECIPE ====================
+// Open edit modal with recipe data
+function openEditModal() {
+  const recipe = $(this).data("recipe");
+  if (!recipe) {
+    alert("Unable to load recipe data for editing.");
+    return;
+  }
+
+  // Populate the edit form
+  $("#editRecipeId").val(recipe.id);
+  $("#editRecipeTitle").val(recipe.title);
+  $("#editRecipeCategory").val(recipe.category);
+  $("#editRecipeIngredients").val(recipe.ingredients);
+  $("#editRecipeInstructions").val(recipe.instructions);
+  $("#editRecipeImageURL").val("");
+  $("#editRecipeImage").val("");
+
+  // Close view modal and open edit modal
+  $("#viewRecipeModal").modal("hide");
+  setTimeout(() => {
+    $("#editRecipeModal").modal("show");
+  }, 300);
+}
+
+// Update recipe via API
+async function updateRecipe() {
+  if (!currentUser) {
+    alert("Please log in to edit recipes.");
+    return;
+  }
+
+  const recipeId = $("#editRecipeId").val();
+  const title = $("#editRecipeTitle").val();
+  const category = $("#editRecipeCategory").val();
+  const ingredients = $("#editRecipeIngredients").val();
+  const instructions = $("#editRecipeInstructions").val();
+  const imageUrl = $("#editRecipeImageURL").val();
+  const imageFile = $("#editRecipeImage")?.[0]?.files?.[0];
+
+  if (!title || !ingredients) {
+    alert("Please fill in Title and Ingredients");
+    return;
+  }
+
+  try {
+    // Use FormData for multipart/form-data request
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("category", category);
+    formData.append("ingredients", ingredients);
+    formData.append("instructions", instructions);
+
+    // Add image file if provided, otherwise use URL
+    if (imageFile) {
+      formData.append("image", imageFile);
+    } else if (imageUrl) {
+      formData.append("imageUrl", imageUrl);
+    }
+
+    const response = await fetch(`${API_BASE_URL}/recipes/${recipeId}`, {
+      method: "PUT",
+      headers: getAuthHeaders(),
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Failed to update recipe");
+    }
+
+    $("#editRecipeModal").modal("hide");
+    await loadAllRecipes();
+    await loadMyRecipes();
+    alert("Recipe updated successfully!");
+  } catch (error) {
+    console.error("Failed to update recipe", error);
+    alert(error.message || "Unable to update recipe right now.");
   }
 }

@@ -62,4 +62,5 @@ public class RecipeDto
     public int OwnerId { get; set; }
     public string? OwnerName { get; set; }
     public DateTime CreatedAt { get; set; }
+    public int FavoriteCount { get; set; }
 }

@@ -34,6 +34,23 @@ public class RecipesController : ControllerBase
     }
 
     /// <summary>
+    /// Gets recipes owned by the current user.
+    /// </summary>
+    [HttpGet("my")]
+    [Authorize]
+    [ProducesResponseType(typeof(IEnumerable<RecipeDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> GetMyRecipes()
+    {
+        var userId = GetCurrentUserId();
+        if (userId == null)
+            return Unauthorized();
+
+        var recipes = await _recipeService.GetByOwnerAsync(userId.Value);
+        return Ok(recipes);
+    }
+
+    /// <summary>
     /// Gets a recipe by ID.
     /// </summary>
     [HttpGet("{id}")]

@@ -8,6 +8,7 @@ namespace RecipeBox.API.Services;
 public interface IRecipeService
 {
     Task<IEnumerable<RecipeDto>> GetAllAsync();
+    Task<IEnumerable<RecipeDto>> GetByOwnerAsync(int ownerId);
     Task<RecipeDto?> GetByIdAsync(int id);
     Task<RecipeDto> CreateAsync(CreateRecipeDto dto, int ownerId, string? imagePath);
     Task<RecipeDto?> UpdateAsync(int id, UpdateRecipeDto dto, int userId, string? newImagePath);

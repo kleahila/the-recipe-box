@@ -9,4 +9,5 @@ public interface IRecipeRepository : IRepository<Recipe>
 {
     Task<Recipe?> GetByIdWithOwnerAsync(int id);
     Task<IEnumerable<Recipe>> GetAllWithOwnerAsync();
+    Task<IEnumerable<Recipe>> GetByOwnerIdAsync(int ownerId);
 }

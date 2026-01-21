@@ -29,6 +29,15 @@ public class RecipeService : IRecipeService
     }
 
     /// <summary>
+    /// Gets recipes by owner ID.
+    /// </summary>
+    public async Task<IEnumerable<RecipeDto>> GetByOwnerAsync(int ownerId)
+    {
+        var recipes = await _recipeRepository.GetByOwnerIdAsync(ownerId);
+        return _mapper.Map<IEnumerable<RecipeDto>>(recipes);
+    }
+
+    /// <summary>
     /// Gets a recipe by ID with owner information.
     /// </summary>
     public async Task<RecipeDto?> GetByIdAsync(int id)

@@ -19,7 +19,8 @@ public class MappingProfile : Profile
         // Recipe mappings
         CreateMap<Recipe, RecipeDto>()
             .ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.ImagePath))
-            .ForMember(dest => dest.OwnerName, opt => opt.MapFrom(src => src.Owner != null ? src.Owner.Name : null));
+            .ForMember(dest => dest.OwnerName, opt => opt.MapFrom(src => src.Owner != null ? src.Owner.Name : null))
+            .ForMember(dest => dest.FavoriteCount, opt => opt.MapFrom(src => src.Favorites != null ? src.Favorites.Count : 0));
 
         CreateMap<CreateRecipeDto, Recipe>()
             .ForMember(dest => dest.ImagePath, opt => opt.MapFrom(src => src.ImageUrl));
