@@ -11,10 +11,10 @@ using RecipeBox.API.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // ==================== DATABASE CONFIGURATION ====================
-// Configure MySQL with Entity Framework Core using Pomelo provider
+// Configure PostgreSQL with Entity Framework Core using Npgsql provider
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+    options.UseNpgsql(connectionString));
 
 // ==================== REPOSITORY REGISTRATION ====================
 // Register repositories for dependency injection

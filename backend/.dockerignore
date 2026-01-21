@@ -1,8 +1,0 @@
-bin/
-obj/
-.git/
-.vscode/
-.idea/
-**/*.user
-**/bin/
-**/obj/

@@ -1,6 +1,6 @@
 // ==================== API CONFIGURATION ====================
 // Base URL for the ASP.NET Core API
-const API_BASE_URL = "http://localhost:5000/api";
+const API_BASE_URL = "http://localhost:5001/api";
 
 const fallbackImage = "https://placehold.co/600x400?text=Recipe+Image";
 let allRecipes = [];
@@ -209,7 +209,7 @@ function renderRecipes(recipes) {
     // Handle image path - prepend API base URL for relative paths
     let imageSrc = recipe.image || fallbackImage;
     if (imageSrc && imageSrc.startsWith("/images/")) {
-      imageSrc = `http://localhost:5000${imageSrc}`;
+      imageSrc = `http://localhost:5001${imageSrc}`;
     }
 
     grid.append(`
@@ -310,7 +310,7 @@ async function viewRecipe() {
     // Handle image path
     let imageSrc = recipe.image || fallbackImage;
     if (imageSrc && imageSrc.startsWith("/images/")) {
-      imageSrc = `http://localhost:5000${imageSrc}`;
+      imageSrc = `http://localhost:5001${imageSrc}`;
     }
 
     $("#viewRecipeContent").html(`
@@ -423,7 +423,7 @@ async function loadSavedRecipes() {
       // Handle image path
       let imageSrc = favorite.recipeImage || fallbackImage;
       if (imageSrc && imageSrc.startsWith("/images/")) {
-        imageSrc = `http://localhost:5000${imageSrc}`;
+        imageSrc = `http://localhost:5001${imageSrc}`;
       }
 
       container.append(`
