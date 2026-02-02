@@ -1,16 +1,17 @@
-# 🥗 The Recipe Box
+# The Recipe Box
 
 A full-stack recipe management system built with **ASP.NET Core 9**, **PostgreSQL**, and **Vanilla JavaScript**.
 
-## 📖 Project Overview
+## Project Overview
 
 The Recipe Box allows users to securely organize, share, and discover recipes. Features include user authentication, recipe CRUD operations, image uploads, and a favorites system.
 
-**Academic Context:** Capstone Project for Web Technologies & Programming course.
+**Course:** Web Technologies & Programming  
+**Date:** February 2026
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 | Layer             | Technology                           |
 | ----------------- | ------------------------------------ |
@@ -24,7 +25,7 @@ The Recipe Box allows users to securely organize, share, and discover recipes. F
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -41,40 +42,48 @@ The Recipe Box allows users to securely organize, share, and discover recipes. F
    cd the-recipe-box
    ```
 
-2. **Create the database**
+2. **Configure the database connection**
+   
+   Edit `backend/appsettings.json` and update the connection string with your PostgreSQL credentials:
+   ```json
+   "ConnectionStrings": {
+     "DefaultConnection": "Host=localhost;Port=5432;Database=recipebox;Username=YOUR_USERNAME;Password=YOUR_PASSWORD"
+   }
+   ```
+
+3. **Create the database**
 
    ```bash
    createdb recipebox
    ```
 
-3. **Apply database migrations**
+4. **Apply database migrations**
 
    ```bash
    cd backend
    dotnet ef database update
    ```
 
-4. **Run the backend**
+5. **Run the backend**
 
    ```bash
-   cd backend
    dotnet run
    ```
 
-5. **Run the frontend** (in a new terminal)
+6. **Run the frontend** (in a new terminal)
 
    ```bash
    cd frontend
    python3 -m http.server 3000
    ```
 
-6. **Access the application**
+7. **Access the application**
    - Frontend: http://localhost:3000
    - API Docs: http://localhost:5001/swagger
 
 ---
 
-## 🔐 Default Users
+## Demo Users
 
 | Email            | Password    |
 | ---------------- | ----------- |
@@ -83,7 +92,7 @@ The Recipe Box allows users to securely organize, share, and discover recipes. F
 
 ---
 
-## 📡 API Endpoints
+## API Endpoints
 
 ### Authentication
 
@@ -112,7 +121,7 @@ The Recipe Box allows users to securely organize, share, and discover recipes. F
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 the-recipe-box/
@@ -134,7 +143,7 @@ the-recipe-box/
 
 ---
 
-## 🔒 Security Features
+## Security Features
 
 - **Password Hashing** - BCrypt with salt
 - **JWT Authentication** - Stateless, secure tokens
@@ -144,17 +153,24 @@ the-recipe-box/
 
 ---
 
-## 🎓 Learning Outcomes
+## Key Concepts Demonstrated
 
 1. **RESTful API Design** - CRUD operations with proper HTTP methods
 2. **N-Tier Architecture** - Controllers → Services → Repositories
-3. **Database Design** - Relational data modeling with foreign keys
-4. **Authentication & Authorization** - JWT-based security
-5. **Frontend-Backend Integration** - Fetch API, async/await
-6. **Error Handling** - Proper HTTP status codes
+3. **Dependency Injection** - Interface-based service registration with Scoped lifetime
+4. **Database Design** - Relational data modeling with Entity Framework Core
+5. **Authentication & Authorization** - JWT-based security with BCrypt password hashing
+6. **Async Programming** - Non-blocking database operations with async/await
+7. **Frontend-Backend Integration** - Fetch API with JWT token handling
 
 ---
 
-## 📝 License
+## Team
+
+- [Add team member names here]
+
+---
+
+## License
 
 MIT License - see [LICENSE](LICENSE) file.
