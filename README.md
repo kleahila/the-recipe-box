@@ -6,7 +6,7 @@ A full-stack recipe management system built with **ASP.NET Core 9**, **PostgreSQ
 
 The Recipe Box allows users to securely organize, share, and discover recipes. Features include user authentication, recipe CRUD operations, image uploads, and a favorites system.
 
-**Course:** Web Technologies & Programming  
+**Course:** Web Technologies & Programming
 **Date:** February 2026
 
 ---
@@ -43,8 +43,9 @@ The Recipe Box allows users to securely organize, share, and discover recipes. F
    ```
 
 2. **Configure the database connection**
-   
+
    Edit `backend/appsettings.json` and update the connection string with your PostgreSQL credentials:
+
    ```json
    "ConnectionStrings": {
      "DefaultConnection": "Host=localhost;Port=5432;Database=recipebox;Username=YOUR_USERNAME;Password=YOUR_PASSWORD"
@@ -166,8 +167,6 @@ the-recipe-box/
 ---
 
 ## Team
-
-- [Add team member names here]
 
 ---
 
